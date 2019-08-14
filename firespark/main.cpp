@@ -13,7 +13,6 @@ drawFireSpark(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	else {
 		//arg1 = dictionary
 		// tick: tTJSVariant::operator tjs_int() const
-
 	}
 	return TJS_S_OK;
 }

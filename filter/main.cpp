@@ -12,12 +12,12 @@ Vortex(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 	// src: layer pointer
 	// dest: layer pointer
 	// rad: tTJSVariant::operator tTVReal() const; default 0.0
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 Stretch(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000F18C 10005db0
+	// TODO: Stub 1000F18C 10005db0 not used but referenced by script (zoomming)
 	if (numparams == 0) return TJS_E_BADPARAMCOUNT;
 	//arg0 = dictionary
 	// src: layer
@@ -31,7 +31,7 @@ Stretch(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatc
 	// dwidth: tTJSVariant::operator tjs_int() const
 	// dheight: tTJSVariant::operator tjs_int() const
 	// opa: tTJSVariant::operator tjs_int() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -79,7 +79,7 @@ initHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 
 static tjs_error TJS_INTF_METHOD
 Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000F37C 10004860
+	// TODO: Stub 1000F37C 10004860; possible replacement by LayerExImage.light
 	if (numparams == 0) return TJS_E_BADPARAMCOUNT;
 	//arg0 = dictionary
 	// layer: layer
@@ -89,7 +89,7 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 
 static tjs_error TJS_INTF_METHOD
 Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000F3F8 10003f20
+	// TODO: Stub 1000F3F8 10003f20; possible replacement by LayerExImage.noise
 	if (numparams == 0) return TJS_E_BADPARAMCOUNT;
 	//arg0 = dictionary
 	// layer: layer
@@ -103,13 +103,13 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 static tjs_error TJS_INTF_METHOD
 ReleaseLens(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000F474 10003f00 not used
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 InitLens(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000F4F0 10003ee0 not used
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -121,7 +121,7 @@ Lens(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 
 	// dest: layer
 	// zoom: tTJSVariant::operator tTVReal() const
 	// power: tTJSVariant::operator tjs_int() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD

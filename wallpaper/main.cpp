@@ -8,7 +8,7 @@ static tjs_error TJS_INTF_METHOD
 getwallpaper(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 10008110 10001C40 not used
 	//ret = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD

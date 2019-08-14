@@ -4,6 +4,12 @@
 #include <string.h>
 #include "ncbind.hpp"
 
+static ttstr getLocalName() {
+	ttstr tmp;
+	TVPGetLocalName(tmp);
+	return tmp;
+}
+
 static tjs_error TJS_INTF_METHOD
 SelectDirectory(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000C190 100036b0
@@ -11,7 +17,7 @@ SelectDirectory(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJ
 	//arg1 = string
 	//arg2 = (narrow?) string
 	//arg3 = (narrow?) string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -21,7 +27,7 @@ CalcPCID(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	//arg1 = tTJSVariantType tTJSVariant::Type()
 
 	//set passed type .PCID = something
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -31,7 +37,7 @@ IsActiveWindow(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJS
 	//arg1 = window pointer
 
 	//ret = int/bool?
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -39,7 +45,7 @@ ExistDirectory(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJS
 	// TODO: Stub 1000C304 100024d0 not used
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -47,7 +53,7 @@ RemoveDirectory(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJ
 	// TODO: Stub 1000C380 10002480 not used
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -55,7 +61,7 @@ CreateDirectory(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJ
 	// TODO: Stub 1000C3FC 10002430 not used
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -69,7 +75,7 @@ GetDatetime(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDis
 	// hour: 
 	// minute: 
 	// second:
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -79,7 +85,7 @@ IsWindowShow(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDi
 	//arg1 = window pointer
 
 	//ret = int/bool?
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -88,7 +94,7 @@ ShowWindow(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = window pointer
 	//arg2 = tTJSVariant::operator tjs_int() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -96,35 +102,35 @@ SetClipboardText(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iT
 	// TODO: Stub 1000C5EC 10002a30
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = tTJSVariantString * tTJSVariant::AsStringNoAddRef() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 GetClipboardTextWithoutControlChar(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000C668 10002890 not used
 	//ret = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 GetClipboardText(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000C6E4 10002760 not used
 	//ret = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 GetFileTime(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000C760 10002650 not used
 	//ret = integer
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 GetFileSize(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000C7DC 10002580 not used
 	//ret = integer
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -133,7 +139,7 @@ CopyFile(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
 	//arg2 = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -142,7 +148,7 @@ MoveFile(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	if (numparams < 2) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
 	//arg2 = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -150,7 +156,7 @@ DeleteFile(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 	// TODO: Stub 1000C950 10002320
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -160,7 +166,7 @@ enumFont(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	// showFixedPitchOnlyInFontSelector: tTJSVariant::operator tjs_int() const
 	//arg2 = iTJSDispatch2 * tTJSVariant::AsObjectNoAddRef() const
 	//ret = array of strings?
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 NCB_REGISTER_FUNCTION(SelectDirectory, SelectDirectory);

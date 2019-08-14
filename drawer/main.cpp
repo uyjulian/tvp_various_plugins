@@ -6,7 +6,7 @@
 
 static tjs_error TJS_INTF_METHOD
 drawAATriangle(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 100090E0 10002350 not used, don't bother implementing
+	// TODO: Stub 100090E0 10002350 not used
 	if (numparams == 0) return TJS_E_BADPARAMCOUNT;
 	//arg0 = tTJSVariant::AsObjectNoAddRef
 	//arg1 = tTVInteger tTJSVariant::AsInteger() const
@@ -16,12 +16,12 @@ drawAATriangle(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJS
 	//arg5 = tTVInteger tTJSVariant::AsInteger() const
 	//arg6 = tTVInteger tTJSVariant::AsInteger() const
 	//arg7 = tTVInteger tTJSVariant::AsInteger() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000915C 100021b0
+	// TODO: Stub 1000915C 100021b0; possible replacement by LayerExDraw.drawLine
 	if (numparams == 0) return TJS_E_BADPARAMCOUNT;
 	//arg0 = tTJSVariant::AsObjectNoAddRef
 	//arg1 = tTVInteger tTJSVariant::AsInteger() const
@@ -40,7 +40,7 @@ drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 
 static tjs_error TJS_INTF_METHOD
 drawLine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 100091D8 10002010
+	// TODO: Stub 100091D8 10002010; possible replacement by LayerExDraw.drawLine
 	if (numparams < 6) return TJS_E_BADPARAMCOUNT;
 	//arg0 = tTJSVariant::AsObjectNoAddRef
 	//arg1 = tTVInteger tTJSVariant::AsInteger() const

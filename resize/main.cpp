@@ -14,7 +14,7 @@ AreaAverageReducation(tTJSVariant *result, tjs_int numparams, tTJSVariant **para
 	//arg4 = tTVInteger tTJSVariant::AsInteger() const
 	//arg5 = tTVInteger tTJSVariant::AsInteger() const
 	//arg6 = tTVInteger tTJSVariant::AsInteger() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 NCB_REGISTER_FUNCTION(AreaAverageReducation, AreaAverageReducation);
