@@ -126,23 +126,23 @@ Lens(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 
 
 static tjs_error TJS_INTF_METHOD
 Blur(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000F5E8 10003730
+	// TODO: Stub 1000F5E8 10003730 not used but referenced by script
 	if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 	//arg0 = dictionary
 	// layer: layer
 	// level: tTJSVariant::operator tjs_int() const
 	// type: tTJSVariant::operator tjs_int() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 static tjs_error TJS_INTF_METHOD
 Smudge(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000F664 100033d0
+	// TODO: Stub 1000F664 100033d0 not used but referenced by script
 	if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 	//arg0 = dictionary
 	// layer: layer
 	// level: tTJSVariant::operator tjs_int() const
-	return TJS_S_OK;
+	return TJS_E_NOTIMPL;
 }
 
 NCB_REGISTER_FUNCTION(Vortex, Vortex);
