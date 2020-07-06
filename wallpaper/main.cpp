@@ -4,12 +4,14 @@
 #include <string.h>
 #include "ncbind.hpp"
 
+#if 0
 static tjs_error TJS_INTF_METHOD
 getwallpaper(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 10008110 10001C40 not used
 	//ret = string
 	return TJS_E_NOTIMPL;
 }
+#endif
 
 static tjs_error TJS_INTF_METHOD
 setwallpaper(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
@@ -24,5 +26,7 @@ setwallpaper(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDi
 	return TJS_S_OK;
 }
 
+#if 0
 NCB_REGISTER_FUNCTION(getwallpaper, getwallpaper);
+#endif
 NCB_REGISTER_FUNCTION(setwallpaper, setwallpaper);

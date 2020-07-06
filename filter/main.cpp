@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ncbind.hpp"
 
+#if 0
 static tjs_error TJS_INTF_METHOD
 Vortex(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000F110 10006ca0 not used
@@ -33,6 +34,7 @@ Stretch(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatc
 	// opa: tTJSVariant::operator tjs_int() const
 	return TJS_E_NOTIMPL;
 }
+#endif
 
 static tjs_error TJS_INTF_METHOD
 endHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
@@ -100,6 +102,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 	return TJS_S_OK;
 }
 
+#if 0
 static tjs_error TJS_INTF_METHOD
 ReleaseLens(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 1000F474 10003f00 not used
@@ -144,16 +147,21 @@ Smudge(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 	// level: tTJSVariant::operator tjs_int() const
 	return TJS_E_NOTIMPL;
 }
+#endif
 
+#if 0
 NCB_REGISTER_FUNCTION(Vortex, Vortex);
 NCB_REGISTER_FUNCTION(Stretch, Stretch);
+#endif
 NCB_REGISTER_FUNCTION(endHaze, endHaze);
 NCB_REGISTER_FUNCTION(doHaze, doHaze);
 NCB_REGISTER_FUNCTION(initHaze, initHaze);
 NCB_REGISTER_FUNCTION(Contrast, Contrast);
 NCB_REGISTER_FUNCTION(Noise, Noise);
+#if 0
 NCB_REGISTER_FUNCTION(ReleaseLens, ReleaseLens);
 NCB_REGISTER_FUNCTION(InitLens, InitLens);
 NCB_REGISTER_FUNCTION(Lens, Lens);
 NCB_REGISTER_FUNCTION(Blur, Blur);
 NCB_REGISTER_FUNCTION(Smudge, Smudge);
+#endif

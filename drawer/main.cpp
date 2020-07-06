@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ncbind.hpp"
 
+#if 0
 static tjs_error TJS_INTF_METHOD
 drawAATriangle(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
 	// TODO: Stub 100090E0 10002350 not used
@@ -18,6 +19,7 @@ drawAATriangle(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJS
 	//arg7 = tTVInteger tTJSVariant::AsInteger() const
 	return TJS_E_NOTIMPL;
 }
+#endif
 
 static tjs_error TJS_INTF_METHOD
 drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
@@ -57,6 +59,8 @@ drawLine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	return TJS_S_OK;
 }
 
+#if 0
 NCB_REGISTER_FUNCTION(drawAATriangle, drawAATriangle);
+#endif
 NCB_REGISTER_FUNCTION(drawAALine, drawAALine);
 NCB_REGISTER_FUNCTION(drawLine, drawLine);
