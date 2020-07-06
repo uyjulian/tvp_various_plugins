@@ -12,7 +12,7 @@ static ttstr getLocalName() {
 
 static tjs_error TJS_INTF_METHOD
 SelectDirectory(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000C190 100036b0
+	// TODO: Stub 1000C190 100036b0; Storages.selectDirectory is used in place of this
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
 	//arg2 = (narrow?) string
@@ -32,7 +32,7 @@ CalcPCID(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 
 static tjs_error TJS_INTF_METHOD
 IsActiveWindow(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000C288 10003420
+	// TODO: Stub 1000C288 10003420; Window.isActive is used in place of this
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = window pointer
 
@@ -66,7 +66,7 @@ CreateDirectory(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJ
 
 static tjs_error TJS_INTF_METHOD
 GetDatetime(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000C478 10003030
+	// TODO: Stub 1000C478 10003030; new Date() is used in place of this
 	//ret = dictionary
 	// year: 
 	// mon:
@@ -99,7 +99,7 @@ ShowWindow(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 
 static tjs_error TJS_INTF_METHOD
 SetClipboardText(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000C5EC 10002a30
+	// TODO: Stub 1000C5EC 10002a30; Clipboard.asText is used in place of this
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = tTJSVariantString * tTJSVariant::AsStringNoAddRef() const
 	return TJS_E_NOTIMPL;
@@ -153,7 +153,7 @@ MoveFile(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 
 static tjs_error TJS_INTF_METHOD
 DeleteFile(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000C950 10002320
+	// TODO: Stub 1000C950 10002320; Storages.deleteFile is used in place of this
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = string
 	return TJS_E_NOTIMPL;
@@ -161,7 +161,7 @@ DeleteFile(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 
 static tjs_error TJS_INTF_METHOD
 enumFont(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000C9CC 10002180
+	// TODO: Stub 1000C9CC 10002180; Font.getList is used in place of this
 	//arg1 = iTJSDispatch2 * tTJSVariant::AsObjectNoAddRef() const
 	// showFixedPitchOnlyInFontSelector: tTJSVariant::operator tjs_int() const
 	//arg2 = iTJSDispatch2 * tTJSVariant::AsObjectNoAddRef() const

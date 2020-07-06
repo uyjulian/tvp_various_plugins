@@ -6,7 +6,7 @@
 
 static tjs_error TJS_INTF_METHOD
 drawFireSpark(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000D108 100014d0
+	// TODO: Stub 1000D108 100014d0 not used but referenced by script
 	if (numparams <= 0) {
 		// grab value from tjs_uint64 ::TVPGetTickCount()
 	}
@@ -19,7 +19,7 @@ drawFireSpark(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 
 static tjs_error TJS_INTF_METHOD
 changeFireSpark(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000D184 10002de0
+	// TODO: Stub 1000D184 10002de0 not used but referenced by script
 	if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 	//arg1 = dictionary
 	// maxgen: tTJSVariant::operator tjs_int() const
@@ -33,13 +33,13 @@ changeFireSpark(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJ
 
 static tjs_error TJS_INTF_METHOD
 finishFireSpark(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000D200 10002db0
+	// TODO: Stub 1000D200 10002db0 not used but referenced by script
 	return TJS_S_OK;
 }
 
 static tjs_error TJS_INTF_METHOD
 initFireSpark(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
-	// TODO: Stub 1000D27C 10001ec0
+	// TODO: Stub 1000D27C 10001ec0 not used but referenced by script
 	if (numparams < 1) return TJS_E_BADPARAMCOUNT;
 	//arg1 = iTJSDispatch2 * tTJSVariant::AsObjectNoAddRef() const (layer pointer; destination)
 	//arg2 = dictionary
