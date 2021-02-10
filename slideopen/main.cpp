@@ -68,7 +68,7 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 				result = v31;
 				v12 = v5 + v6;
 				v6 = v28 + a1;
-#if 0
+#if 1
 				for (int j = 0; j < (v28 + a1 - v6); j += 1)
 				{
 					v12[j] = v26[j + res];
@@ -99,12 +99,12 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 				v5[j] = v20[j];
 			}
 			v22 = v28 + result;
-			if ( v28 + result < dest_width )
+			if ( v22 < dest_width )
 			{
-#if 0
+#if 1
 				for (int j = 0; j < (dest_width - v22); j += 1)
 				{
-					v5[j] = *(tjs_uint32 *)(v26 - result + v22 + j);
+					v5[j] = v26[v28 + j];
 				}
 #endif
 				v17 = v32;
@@ -134,7 +134,6 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 	tjs_uint32* v23;
 	tjs_uint32* v26;
 	tjs_uint32* v27;
-	tjs_uint32 *v29;
 	tjs_uint32 v31;
 	tjs_uint32* v32;
 	int v33;
@@ -244,10 +243,9 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 		{
 			for (int i = 0; i < (dest_height - result); i += 1)
 			{
-				v29 = (tjs_uint32 *)v26;
 				for (int j = 0; j < dest_width; j += 1)
 				{
-					v29[j] = v27[j];
+					v26[j] = v27[j];
 				}
 				v6 = v31;
 				result = v6;
@@ -354,16 +352,15 @@ LABEL_12:
 				v14 = dest_width;
 			if ( v12 < v14 )
 			{
-				v16 = v35 - v26;
+				v16 = (tjs_uint8 *)v35 - (tjs_uint8 *)v26;
 				v17 = v14 - v12;
-				v18 = v26 + v12;
+				v18 = (tjs_uint32 *)((tjs_uint8 *)v26 + v12);
 				v12 += v17;
-#if 0
+#if 1
 				for (int j = 0; j < (v14 - v12); j += 1)
 				{
-					*v18 = *(tjs_uint32 *)((tjs_uint8 *)v18 + v16);
-					++v18;
-					v16 = v35 - v26;
+					v18[j] = *(tjs_uint32 *)((tjs_uint8 *)&v18[j] + v16);
+					v16 = (tjs_uint8 *)v35 - (tjs_uint8 *)v26;
 				}
 #endif
 				v10 = v38;
@@ -526,17 +523,14 @@ LABEL_12:
 			if ( v11 < v13 )
 			{
 				v15 = v27 + v11;
-				v16 = v39 - v27;
+				v16 = (tjs_uint8 *)v39 - (tjs_uint8 *)v27;
 				v17 = v36 - v11;
 				v11 += v17;
-				// XXX: check what this should actually do…
-#if 0
 				for (int j = 0; j < v17; j += 1)
 				{
 					v15[j] = *(tjs_uint32 *)((tjs_uint8 *)v15 + v16);
-					v16 = v39 - v27;
+					v16 = (tjs_uint8 *)v39 - (tjs_uint8 *)v27;
 				}
-#endif
 			}
 			if ( v11 < dest_width )
 			{
