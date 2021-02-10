@@ -14,7 +14,7 @@ inline bool get_layer_pointers(iTJSDispatch2 *layerobj, uint8_t **buffer, tjs_in
 	if (buffer)
 	{
 		tTJSVariant var;
-		if (TJS_FAILED(layerobj->PropGet(TJS_IGNOREPROP, TJS_W("mainImageBufferForWrite"), NULL, &var, layerobj)))
+		if (TJS_FAILED(layerobj->PropGet(0, TJS_W("mainImageBufferForWrite"), NULL, &var, layerobj)))
 		{
 			success = false;
 		}
@@ -27,7 +27,7 @@ inline bool get_layer_pointers(iTJSDispatch2 *layerobj, uint8_t **buffer, tjs_in
 	if (width)
 	{
 		tTJSVariant var;
-		if (TJS_FAILED(layerobj->PropGet(TJS_IGNOREPROP, TJS_W("imageWidth"), NULL, &var, layerobj)))
+		if (TJS_FAILED(layerobj->PropGet(0, TJS_W("imageWidth"), NULL, &var, layerobj)))
 		{
 			success = false;
 		}
@@ -40,7 +40,7 @@ inline bool get_layer_pointers(iTJSDispatch2 *layerobj, uint8_t **buffer, tjs_in
 	if (height)
 	{
 		tTJSVariant var;
-		if (TJS_FAILED(layerobj->PropGet(TJS_IGNOREPROP, TJS_W("imageHeight"), NULL, &var, layerobj)))
+		if (TJS_FAILED(layerobj->PropGet(0, TJS_W("imageHeight"), NULL, &var, layerobj)))
 		{
 			success = false;
 		}
@@ -53,7 +53,7 @@ inline bool get_layer_pointers(iTJSDispatch2 *layerobj, uint8_t **buffer, tjs_in
 	if (pitch)
 	{
 		tTJSVariant var;
-		if (TJS_FAILED(layerobj->PropGet(TJS_IGNOREPROP, TJS_W("mainImageBufferPitch"), NULL, &var, layerobj)))
+		if (TJS_FAILED(layerobj->PropGet(0, TJS_W("mainImageBufferPitch"), NULL, &var, layerobj)))
 		{
 			success = false;
 		}
@@ -72,8 +72,13 @@ inline bool update_layer(iTJSDispatch2 *layerobj, tjs_int left, tjs_int top, tjs
 	tTJSVariant var;
 	if (TJS_SUCCEEDED(layerobj->PropGet(TJS_IGNOREPROP, TJS_W("update"), NULL, &var, layerobj)))
 	{
-		tTJSVariant *varsp[4] = {left, top, width, height};
-		if (TJS_SUCCEEDED(var->FuncCall(0, NULL, NULL, NULL, 4, varsp, layerobj)))
+		tTJSVariant val[4];
+		tTJSVariant *varsp[4] = { val, val + 1, val + 2, val + 3 };
+		val[0] = left;
+		val[1] = top;
+		val[2] = width;
+		val[3] = height;
+		if (TJS_SUCCEEDED(var.AsObjectNoAddRef()->FuncCall(0, NULL, NULL, NULL, 4, varsp, layerobj)))
 		{
 			return true;
 		}

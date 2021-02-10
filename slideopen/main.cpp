@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ncbind.hpp"
+#include "layer_util.h"
 
 static struct
 {
@@ -21,9 +22,9 @@ static struct
 
 static int sub_10001000(int a1, int dest_width, int dest_height)
 {
-	int v3;
+	tjs_uint8* v3;
 	int result;
-	int v5;
+	tjs_uint8* v5;
 	int v6;
 	uint32_t *v7;
 	int v8;
@@ -34,7 +35,6 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 	int v13;
 	int v14;
 	int v15;
-	bool v16;
 	int v17;
 	uint32_t *v18;
 	int v19;
@@ -44,11 +44,9 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 	int v23;
 	int v24;
 	int v25;
-	int v26;
-	int v27;
+	tjs_uint8* v26;
 	int v28;
 	unsigned int v29;
-	int v30;
 	int v31;
 	int v32;
 
@@ -64,7 +62,7 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 		{
 			result -= a1;
 			v31 = result;
-			for (v27 = 0; v27 < dest_height; v27 += 1)
+			for (int v27 = 0; v27 < dest_height; v27 += 1)
 			{
 				v6 = 0;
 				v7 = (uint32_t *)v5;
@@ -82,7 +80,7 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 				v6 = v28 + a1;
 				for (v11 = 0; v11 < (v28 + a1 - v6); v11 += 1)
 				{
-					*v12 = *(uint32_t *)((char *)v12 + v26 - v5);
+					*v12 = *(uint32_t *)((tjs_uint8 *)v12 - v5 + v26);
 					++v12;
 				}
 				result = v31;
@@ -104,7 +102,7 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 		result = a1;
 		v17 = dest_width / 2 - a1;
 		v32 = v17;
-		for (v30 = 0; v30 < dest_height; v30 += 1)
+		for (int v30 = 0; v30 < dest_height; v30 += 1)
 		{
 			v18 = (uint32_t *)v5;
 			v20 = (int *)(v26 + 4 * result);
@@ -136,7 +134,7 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 
 static int sub_100011B0(int a1, int dest_width, int dest_height)
 {
-	int v3;
+	tjs_uint8* v3;
 	int v4;
 	int v5;
 	unsigned int v6;
@@ -145,27 +143,27 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 	uint32_t *v9;
 	int v10;
 	int v11;
-	int v12;
+	tjs_uint8* v12;
 	int v13;
 	uint32_t *v14;
 	int v15;
-	int v16;
+	tjs_uint8* v16;
 	int result;
 	int v18;
 	int v19;
 	uint32_t *v20;
 	int v21;
 	int v22;
-	int v23;
+	tjs_uint8* v23;
 	int v24;
 	uint32_t *v25;
-	int v26;
-	int v27;
+	tjs_uint8* v26;
+	tjs_uint8* v27;
 	int v28;
 	uint32_t *v29;
 	int v30;
 	unsigned int v31;
-	int v32;
+	tjs_uint8* v32;
 	int v33;
 	int v34;
 	int v35;
@@ -200,7 +198,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 				v9 = (uint32_t *)v3;
 				for (v8 = 0; v8 < dest_width; v8 += 1)
 				{
-					*v9 = *(uint32_t *)((char *)v9 + v32 - v3);
+					*v9 = *(uint32_t *)((tjs_uint8 *)v9 - v3 + v32);
 					++v9;
 				}
 				v6 = v31;
@@ -222,7 +220,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 				v14 = (uint32_t *)v3;
 				for (v15 = 0; v15 < dest_width; v15 += 1)
 				{
-					*v14 = *(uint32_t *)((char *)v14 + v12 - v3);
+					*v14 = *(uint32_t *)((tjs_uint8 *)v14 - v3 + v12);
 					++v14;
 				}
 				v6 = v31;
@@ -242,7 +240,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 					v20 = (uint32_t *)v3;
 					for (v19 = 0; v19 < dest_width; v19 += 1)
 					{
-						*v20 = *(uint32_t *)((char *)v20 + v16 - v3);
+						*v20 = *(uint32_t *)((tjs_uint8 *)v20 - v3 + v16);
 						++v20;
 					}
 					v6 = v31;
@@ -267,7 +265,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 					v25 = (uint32_t *)v3;
 					for (v24 = 0; v24 < dest_width; v24 += 1)
 					{
-						*v25 = *(uint32_t *)((char *)v25 + v23 - v3);
+						*v25 = *(uint32_t *)((tjs_uint8 *)v25 - v3 + v23);
 						++v25;
 					}
 					v4 = a1;
@@ -287,7 +285,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 				v29 = (uint32_t *)v26;
 				for (v30 = 0; v30 < dest_width; v30 += 1)
 				{
-					*v29 = *(uint32_t *)((char *)v29 + v27 - v26);
+					*v29 = *(uint32_t *)((tjs_uint8 *)v29 - v26 + v27);
 					++v29;
 				}
 				v6 = v31;
@@ -311,28 +309,27 @@ static int sub_100013D0(int a1, int dest_width, int dest_height)
 	int v10;
 	int v11;
 	int v12;
-	int v13;
+	tjs_uint8* v13;
 	int v14;
-	int dest_width;
 	int v16;
 	int v17;
 	uint32_t *v18;
-	int v19;
+	tjs_uint8* v19;
 	int v20;
 	int v21;
-	int v22;
+	tjs_uint8* v22;
 	int v23;
 	int v24;
-	int v26;
-	int v27;
-	int v28;
-	int v29;
+	tjs_uint8* v26;
+	tjs_uint8* v27;
+	tjs_uint8* v28;
+	tjs_uint8* v29;
 	int v30;
 	int v31;
 	int v32;
 	int v33;
 	int v34;
-	int v35;
+	tjs_uint8* v35;
 	int v36;
 	int v37;
 	int v38;
@@ -409,6 +406,7 @@ LABEL_12:
 			if ( v12 < v14 )
 			{
 				v16 = v35 - v26;
+				v17 = v14 - v12;
 				v18 = (uint32_t *)(v26 + 4 * v12);
 				v12 += v17;
 				for (v17 = 0; v17 < (v14 - v12); v17 += 1)
@@ -476,9 +474,9 @@ LABEL_37:
 				v23 = v21 - v32;
 				goto LABEL_37;
 			}
-LABEL_38:
 		}
 	}
+LABEL_38:
 	return result;
 }
 
@@ -492,23 +490,22 @@ static int sub_100016C0(int a1, int dest_width, int dest_height)
 	int v9;
 	int v10;
 	int v11;
-	int v12;
+	tjs_uint8* v12;
 	int v13;
-	int dest_width;
-	int v15;
+	tjs_uint8* v15;
 	int v16;
 	int v17;
 	uint32_t *v18;
-	int v19;
+	tjs_uint8* v19;
 	int v20;
 	int v21;
-	int v22;
+	tjs_uint8* v22;
 	int v23;
-	int v24;
+	tjs_uint8* v24;
 	unsigned int v25;
-	int v26;
-	int v27;
-	int v28;
+	tjs_uint8* v26;
+	tjs_uint8* v27;
+	tjs_uint8* v28;
 	int v29;
 	int v30;
 	int v31;
@@ -519,9 +516,9 @@ static int sub_100016C0(int a1, int dest_width, int dest_height)
 	int v36;
 	int v37;
 	uint32_t *v38;
-	int v39;
+	tjs_uint8* v39;
 	int v40;
-	int v41;
+	tjs_uint8* v41;
 
 	v27 = slideopen_args.dest_buffer;
 	v39 = slideopen_args.src_buffer;
@@ -585,7 +582,7 @@ LABEL_12:
 				for (v35 = 0; v35 < v29; v35 += 1)
 				{
 					v12 += 4;
-					*(uint32_t *)(v12 - 4) = *(uint32_t *)(v12 + v41 - v27 - 4);
+					*(uint32_t *)(v12 - 4) = *(uint32_t *)(v12 - v27 + v41 - 4);
 				}
 				v10 = v29;
 			}
@@ -664,9 +661,9 @@ LABEL_37:
 				v23 = v21 - v31;
 				goto LABEL_37;
 			}
-LABEL_38:
 		}
 	}
+LABEL_38:
 	return result;
 }
 
@@ -687,7 +684,7 @@ drawSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	// TODO: Stub 1000A15C 100020d0
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 	//arg1 = tTVReal tTJSVariant::AsReal() const
-	tjs_real a1 = param[0].AsReal();
+	tjs_real a1 = param[0]->AsReal();
 	if (!slideopen_args.open)
 	{
 		a1 = 1.0 - a1;
@@ -721,11 +718,13 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	if (!numparams) return TJS_E_BADPARAMCOUNT;
 
 	//arg0 = Slide Open plugin object/dictionary
-	ncbPropAccessor dict(param[0]);
+	ncbPropAccessor dict(param[0]->AsObjectNoAddRef());
 	// open: tTJSVariant::operator tjs_int() const
+	TVPAddLog(TJS_W("0.5"));
 	slideopen_args.open = dict.getIntValue(TJS_W("open"), 1);
 	// dest: layer pointer
 	tTJSVariant dest;
+	TVPAddLog(TJS_W("1"));
 	if (dict.checkVariant(TJS_W("dest"), dest))
 	{
 		get_layer_pointers(dest, &slideopen_args.dest_buffer, &slideopen_args.dest_width, &slideopen_args.dest_height, &slideopen_args.dest_pitch);
@@ -735,6 +734,7 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	{
 		return TJS_E_FAIL;
 	}
+	TVPAddLog(TJS_W("2"));
 	// src: layer pointer
 	tTJSVariant src;
 	if (dict.checkVariant(TJS_W("src"), src))
@@ -745,12 +745,14 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	{
 		return TJS_E_FAIL;
 	}
+	TVPAddLog(TJS_W("3"));
 	// type: tTJSVariant::operator tjs_int() const
 	tTJSVariant type_var;
 	if (dict.checkVariant(TJS_W("type"), type_var))
 	{
 		slideopen_args.type = dict.getIntValue(TJS_W("type"));
 	}
+	TVPAddLog(TJS_W("4"));
 
 	if (slideopen_args.src_width != slideopen_args.dest_width || slideopen_args.src_height != slideopen_args.dest_height || slideopen_args.src_pitch != slideopen_args.dest_pitch)
 	{
@@ -759,20 +761,20 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	if (slideopen_args.open)
 	{
 		slideopen_args.buffer = malloc(4 * slideopen_args.dest_height * slideopen_args.dest_width + 4);
-		slideopen_args.buffer_aligned = (tjs_uint8*)((char *)v18 - ((unsigned __int8)v18 & 3) + 4);
-		if (tjsgdv_dest_pitch < 1)
+		slideopen_args.buffer_aligned = (tjs_uint8*)((char *)slideopen_args.buffer - ((size_t)slideopen_args.buffer & 3) + 4);
+		if (slideopen_args.dest_pitch < 1)
 		{
 			slideopen_args.buffer_aligned -= slideopen_args.dest_pitch * (slideopen_args.dest_height - 1);
 		}
 		uint8_t *v21 = slideopen_args.dest_buffer;
-		uint32_t *v22 = (uint32_t *)(slideopen_args.buffer_aligned)
+		uint32_t *v22 = (uint32_t *)(slideopen_args.buffer_aligned);
 		tjs_uint32 v33 = (tjs_uint32)slideopen_args.dest_pitch >> 2;
 		for (tjs_int i = 0; i < slideopen_args.dest_height; i += 1)
 		{
-			v25 = v22;
+			tjs_uint32* v25 = v22;
 			for (tjs_int j = 0; j < slideopen_args.dest_width; j += 1)
 			{
-				*v25 = *(uint32_t *)((char *)v25 + v21 - (uint32_t)v22);
+				*v25 = *(uint32_t *)(v25 - v22 + v21);
 				++v25;
 			}
 			v22 += v33;
@@ -782,7 +784,7 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	if ( slideopen_args.type < 0 )
 	{
 		slideopen_args.type = TVPGetTickCount() & 3;
-		if ( tjsgdv_current_type != slideopen_args.type )
+		if ( slideopen_args.current_type != slideopen_args.type )
 			goto LABEL_52;
 		slideopen_args.type += 1;
 	}

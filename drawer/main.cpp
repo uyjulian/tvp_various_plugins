@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ncbind.hpp"
+#include "layer_util.h"
 
 #if 0
 static tjs_error TJS_INTF_METHOD
@@ -171,7 +172,7 @@ int sub_100014A0(int x1, int y1, int x2, int y2, unsigned int color)
 	int v40;
 	int v41;
 	int v42;
-	signed int v43;
+	int v43;
 	int v44;
 	int v45;
 	int v46;
@@ -214,7 +215,7 @@ int sub_100014A0(int x1, int y1, int x2, int y2, unsigned int color)
 			v47 = (color >> 16) & 0xFF;
 			result = v25 >> 8;
 			v40 = (uint8_t)v25;
-			for (size_t i = 0; i < v39; i += 1)
+			for (int i = 0; i < v39; i += 1)
 			{
 				v26 = v24 + v31 * (v11 >> 16);
 				v11 = (uint16_t)v11;
@@ -251,7 +252,7 @@ int sub_100014A0(int x1, int y1, int x2, int y2, unsigned int color)
 			v33 = v31 * v13;
 			v46 = (color >> 16) & 0xFF;
 			v41 = v31 * (int16_t)y1;
-			for (size_t i = 0; i < v43; i += 1)
+			for (int i = 0; i < v43; i += 1)
 			{
 				v18 = v15 + (v9 >> 16);
 				v19 = (uint16_t)v9;
@@ -278,17 +279,17 @@ drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 	tjs_int dest_width, dest_height, dest_pitch;
 	tjs_uint8 *dest_buffer;
 	// layer: arg0 = tTJSVariant::AsObjectNoAddRef
-	iTJSDispatch2 *layer = param[0];
+	iTJSDispatch2 *layer = param[0]->AsObjectNoAddRef();
 	// x0: arg1 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int x0 = param[1];
+	tjs_int x1 = param[1]->AsInteger();
 	// y0: arg2 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int y0 = param[2];
+	tjs_int y1 = param[2]->AsInteger();
 	// x1: arg3 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int x1 = param[3];
+	tjs_int x2 = param[3]->AsInteger();
 	// y1: arg4 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int y1 = param[4];
+	tjs_int y2 = param[4]->AsInteger();
 	// color: arg5 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int color = param[5];
+	tjs_int color = param[5]->AsInteger();
 
 	//get layer stuff
 	get_layer_pointers(layer, &dest_buffer, &dest_width, &dest_height, &dest_pitch);
@@ -365,7 +366,7 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 			v18 = y1 * result;
 			v19 = v26 * result;
 			v34 = v26 * v16 + y1;
-			for (size_t i = 0; i < v16; i += 1)
+			for (int i = 0; i < v16; i += 1)
 			{
 				v20 = v18 + x1;
 				v18 += v19;
@@ -399,7 +400,7 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		v12 = v7 * result;
 		v13 = y1 * result;
 		v30 = v26 * result;
-		for (size_t i = 0; i < ((v5 + 1) >> 1); i += 1)
+		for (int i = 0; i < ((v5 + 1) >> 1); i += 1)
 		{
 			((uint32_t *)(line_vars.buffer + 4 * (v13 + x1)))[0] = color;
 			((uint32_t *)(line_vars.buffer + 4 * (v12 + x2)))[0] = color;
@@ -434,17 +435,17 @@ drawLine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	tjs_int dest_width, dest_height, dest_pitch;
 	tjs_uint8 *dest_buffer;
 	// layer: arg0 = tTJSVariant::AsObjectNoAddRef
-	iTJSDispatch2 *layer = param[0];
+	iTJSDispatch2 *layer = param[0]->AsObjectNoAddRef();
 	// x0: arg1 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int x0 = param[1];
+	tjs_int x1 = param[1]->AsInteger();
 	// y0: arg2 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int y0 = param[2];
+	tjs_int y1 = param[2]->AsInteger();
 	// x1: arg3 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int x1 = param[3];
+	tjs_int x2 = param[3]->AsInteger();
 	// y1: arg4 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int y1 = param[4];
+	tjs_int y2 = param[4]->AsInteger();
 	// color: arg5 = tTVInteger tTJSVariant::AsInteger() const
-	tjs_int color = param[5];
+	tjs_int color = param[5]->AsInteger();
 
 	//get layer stuff
 	get_layer_pointers(layer, &dest_buffer, &dest_width, &dest_height, &dest_pitch);

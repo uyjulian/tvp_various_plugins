@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ncbind.hpp"
+#include "layer_util.h"
+#include <cmath>
 #include <limits>
 
 #if 0
@@ -67,7 +69,7 @@ static tjs_real* parse_waves(tTJSVariant waves_var)
 	for (int i = 0; i < c1; i += 1)
 	{
 		tTJSVariant wave_var;
-		if (info.checkVariant(i, wave_var))
+		if (waves_accessor.checkVariant(i, wave_var))
 		{
 			ncbPropAccessor waves2(wave_var);
 			int c2 = waves2.GetArrayCount();
@@ -87,10 +89,10 @@ static tjs_real* parse_waves(tTJSVariant waves_var)
 	for (int i = 0; i < 0x4000; i += 1)
 	{
 		tjs_real v21 = 0.0;
-		tjs_real *v22 = &waves_tmp;
+		tjs_real *v22 = waves_tmp;
 		for (int j = 0; j < c1; j += 1)
 		{
-			v21 += cos(v18 * v22[0] + *v22[1] * v22[2]);
+			v21 += cos(v18 * v22[0] + v22[1] * v22[2]);
 			v22 += 24;
 			v18 += 0.001533980787885641;
 		}
@@ -159,10 +161,9 @@ static int sub_100029C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
 	int result;
 	int v5;
 	int v6;
-	int v7;
-	int *v8;
-	int *v9;
-	int *v10;
+	tjs_uint32 *v8;
+	tjs_uint32 *v9;
+	tjs_uint32 *v10;
 	tjs_uint32 *v11;
 	int v12;
 
@@ -179,7 +180,6 @@ static int sub_100029C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
 		v6 = a4 - v5 - 2;
 	}
 	a1[0] = a2[0];
-	v7 = (v6 + 3) >> 2;
 	v8 = a1 + 1;
 	v9 = a2 + 1;
 	if ( a3 & 1 )
@@ -219,10 +219,9 @@ static int sub_100027C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
 	int result;
 	int v5;
 	int v6;
-	int v7;
-	int *v8;
+	tjs_uint32 *v8;
 	tjs_uint32 *v9;
-	int *v10;
+	tjs_uint32 *v10;
 	tjs_uint32 *v11;
 	int v12;
 
@@ -239,7 +238,6 @@ static int sub_100027C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
 		v6 = a4 - v5 - 2;
 	}
 	a1[0] = a2[0];
-	v7 = (v6 + 3) >> 2;
 	v8 = a1 + 1;
 	v9 = a2 + 1;
 	if ( a3 & 1 )
@@ -300,7 +298,7 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 	// tick: tTJSVariant::operator tjs_int() const; default 0
 	tjs_int tick = dict.getIntValue(TJS_W("tick"), 0);
 	// per: tTJSVariant::operator tTVReal() const; default 0.0
-	tjs_real per = dict.getPerValue(TJS_W("tick"), 0.0);
+	tjs_real per = dict.getRealValue(TJS_W("tick"), 0.0);
 	// bgcolor: tTJSVariant::operator tjs_int() const; unused
 	// blend: tTJSVariant::operator tjs_int() const
 	int (*v76)(tjs_uint32 *, tjs_uint32 *, int, int);
@@ -311,31 +309,22 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 		v76 = sub_100027C0;
 	}
 	// The actual update code (not cleaned up)
+	tjs_int32 v27;
+	tjs_int32 v33;
 	{
-		int v11;
-		int v20;
+		tjs_uint8* v20;
 		tjs_uint32 v21;
-		int v22;
-		int v24;
 		tjs_int64 v25;
 		int v26;
-		tjs_int32 v27;
-		tjs_int32 v28;
 		tjs_real v29;
-		int v30;
 		tjs_int64 v31;
 		int v32;
-		int v33;
 		int v34;
 		tjs_int32 v35;
-		int v36;
-		tjs_real v37;
-		int v38;
+		tjs_uint8* v36;
 		tjs_int64 v39;
 		int v40;
 		int v41;
-		tjs_real v42;
-		int v43;
 		tjs_int64 v44;
 		int v45;
 		int v53;
@@ -345,7 +334,7 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 		int v57;
 		tjs_int32 v58;
 		tjs_int32 v59;
-		int v61;
+		tjs_uint8* v61;
 		tjs_int32 v62;
 		int v63;
 		tjs_int32 v64;
@@ -353,18 +342,18 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 		int v66;
 		int v67;
 		int v68;
-		int v69;
-		int v70;
-		int v71;
+		tjs_uint8* v69;
+		tjs_uint8* v70;
+		tjs_uint8* v71;
 		tjs_uint32 v72;
 		int v73;
 		int v74;
-		int v75;
 		tjs_real v77;
 		tjs_uint32 v78;
 		int v79;
 		int v80;
 		int v81;
+		int v97;
 		v20 = dest_buffer;
 		v77 = (tjs_real)((tjs_int64)((tjs_real)tick * haze_args.speed * 651.8986469044033) & 0x3FFF);
 		v72 = src_pitch >> 2;
@@ -652,7 +641,7 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 				v7 = 255 - level;
 				for (tjs_int i = 0; i < (v22 - v7); i += 1)
 				{
-					v24 = (vtmp - 255 * level) / v50;
+					tjs_int v24 = (vtmp - 255 * level) / v50;
 					vtmp += 255;
 					v52[i] = v24;
 				}
@@ -660,7 +649,7 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 			if ( v7 < 256 )
 				memset32(&v20[4 * v7], 255, 256 - v7);
 		}
-		tjs_uint32 *v52 = dest_buffer;
+		tjs_uint32 *v52 = (tjs_uint32 *)dest_buffer;
 		v49 *= 4;
 		for (tjs_int i = 0; i < dest_height; i += 1)
 		{
@@ -675,7 +664,7 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	return TJS_S_OK;
 }
 
-static int noise_current_seed = 0
+static int noise_current_seed = 0;
 
 static tjs_error TJS_INTF_METHOD
 Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
@@ -699,17 +688,56 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 	tjs_int under = dict.getIntValue(TJS_W("under"), 0);
 	// upper: tTJSVariant::operator tjs_int() const; default 255
 	tjs_int upper = dict.getIntValue(TJS_W("upper"), 255);
-	if ( tjslv_upper < tjslv_under )
+	if ( upper < under )
 	{
-		tjs_int tmp = tjslv_upper;
-		tjslv_upper = tjslv_under;
-		tjslv_under = tmp;
+		tjs_int tmp = upper;
+		upper = under;
+		under = tmp;
 	}
 	{
+		tjs_uint32 v24;
+		tjs_uint32 *v26;
+		tjs_uint32 *v27;
+		tjs_int32 v28;
+		int v29;
+		tjs_int64 v30;
+		tjs_uint32 *v31;
+		int v32;
+		tjs_uint16 v33;
+		tjs_uint32 *v35;
+		int v36;
+		int v37;
+		int v38;
+		int v39;
+		tjs_uint32 *v40;
+		tjs_uint32 v41;
+		tjs_uint32 v43;
+		int v44;
+		tjs_uint32 *v45;
+		tjs_int32 v46;
+		tjs_uint32 v47;
+		tjs_uint32 v48;
+		tjs_uint32 *v49;
+		tjs_uint32 v50;
+		tjs_uint32 v51;
+		tjs_int32 v52;
+		tjs_uint32 *v53;
+		tjs_uint32 *v55;
+		int v56;
+		int v57;
+		int v58;
+		int v59;
+		tjs_uint32 *v60;
+		int v62;
+		tjs_uint32 v63;
+		tjs_uint32 v74;
+		tjs_uint32 v75;
+		tjs_uint32 *v87;
+		tjs_uint32 *v90;
 		v24 = upper - under;
-		v26 = dest_buffer;
+		v26 = (tjs_uint32 *)dest_buffer;
 		noise_current_seed = seed;
-		v90 = dest_buffer;
+		v90 = (tjs_uint32 *)dest_buffer;
 		if ( monocro )
 		{
 			if ( v24 == 255 )
@@ -849,7 +877,6 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 				v56 = dest_width;
 				if ( (tjs_int32)dest_width >= 2 )
 				{
-					v85 = (tjs_uint8 *)(dest_width - 2 * (dest_width >> 1));
 					for (tjs_int j = 0; j < (dest_width >> 1); j += 1)
 					{
 						v57 = 1566083941 * seed + 1;
@@ -865,7 +892,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 						seed = noise_current_seed;
 					}
 					seed = noise_current_seed;
-					v56 = v85;
+					v56 = dest_width - 2 * (dest_width >> 1);
 				}
 				for (tjs_int j = 0; j < v56; j += 1)
 				{
