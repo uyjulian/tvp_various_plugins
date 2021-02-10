@@ -14,7 +14,6 @@ static struct
 	iTJSDispatch2 *dest_dispatch;
 	bool open;
 	tjs_int type;
-	tjs_int current_type;
 	tjs_uint8 *buffer;
 	tjs_uint8 *buffer_aligned;
 	tjs_int pitch;
@@ -505,9 +504,15 @@ finishSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJ
 	// TODO: Stub 1000A0E0 10002330
 	if (slideopen_args.buffer)
 	{
-		free(slideopen_args.buffer);
+		delete[] slideopen_args.buffer;
 		slideopen_args.buffer = NULL;
 	}
+	if (slideopen_args.dest_dispatch)
+	{
+		slideopen_args.dest_dispatch->Release();
+		slideopen_args.dest_dispatch = NULL;
+	}
+	memset(&slideopen_args, 0, sizeof(slideopen_args));
 	return TJS_S_OK;
 }
 
@@ -543,6 +548,8 @@ drawSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	update_layer(slideopen_args.dest_dispatch, 0, 0, slideopen_args.dest_width, slideopen_args.dest_height);
 	return TJS_S_OK;
 }
+
+static tjs_int last_type = 0;
 
 static tjs_error TJS_INTF_METHOD
 initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
@@ -587,7 +594,7 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	}
 	if (slideopen_args.open)
 	{
-		slideopen_args.buffer = (tjs_uint8*)malloc(4 * slideopen_args.dest_height * slideopen_args.dest_width + 4);
+		slideopen_args.buffer = new tjs_uint8[4 * slideopen_args.dest_height * slideopen_args.dest_width + 4];
 		slideopen_args.buffer_aligned = (tjs_uint8*)((tjs_uint8 *)slideopen_args.buffer - ((size_t)slideopen_args.buffer & 3) + 4);
 		if (slideopen_args.dest_pitch < 1)
 		{
@@ -609,7 +616,7 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	if ( slideopen_args.type < 0 )
 	{
 		slideopen_args.type = TVPGetTickCount() & 3;
-		if ( slideopen_args.current_type != slideopen_args.type )
+		if ( last_type != slideopen_args.type )
 			goto LABEL_52;
 		slideopen_args.type += 1;
 	}
@@ -619,7 +626,7 @@ LABEL_52:
 	{
 		slideopen_args.type &= 1u;
 	}
-	slideopen_args.current_type = slideopen_args.type;
+	last_type = slideopen_args.type;
 	return TJS_S_OK;
 }
 

@@ -571,17 +571,9 @@ endHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatc
 			haze_args.lwaves = NULL;
 		}
 		haze_args.enabled = false;
+		memset(&haze_args, 0, sizeof(haze_args));
 	}
 	return TJS_S_OK;
-}
-
-inline void memset32(void *ptr, tjs_uint32 value, int count)
-{
-	tjs_uint32 *p = (tjs_uint32 *)ptr;
-	for (int i = 0; i < count; i += 1)
-	{
-		*p++ = value;
-	}
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -647,7 +639,13 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 				}
 			}
 			if ( v7 < 256 )
-				memset32(&v20[4 * v7], 255, 256 - v7);
+			{
+				tjs_uint32 *p = (tjs_uint32 *)&v20[4 * v7];
+				for (int i = 0; i < 256 - v7; i += 1)
+				{
+					*p++ = 255;
+				}
+			}
 		}
 		tjs_uint32 *v52 = (tjs_uint32 *)dest_buffer;
 		v49 *= 4;
