@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ncbind.hpp"
+#include "ncbind/ncbind.hpp"
 #include "layer_util.h"
 
 #if 0
@@ -24,7 +24,7 @@ drawAATriangle(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJS
 
 static struct
 {
-	tjs_uint8 *buffer;
+	tjs_uint32 *buffer;
 	tjs_int pitch, width, height;
 	tjs_int width_minus_one, height_minus_one;
 } line_vars;
@@ -127,7 +127,7 @@ static tjs_int32 sub_100011A0(int *x1, int *y1, int *x2, int *y2)
 	return result;
 }
 
-static void sub_10001260(tjs_uint8 *a1, int a2, int a3, int a4)
+static void sub_10001260(tjs_uint32 *a1, int a2, int a3, int a4)
 {
 	line_vars.buffer = a1;
 	line_vars.pitch = a2;
@@ -220,15 +220,15 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 				v26 = v24 + v31 * (v11 >> 16);
 				v11 = (tjs_uint16)v11;
 				v45 = v26 + v31;
-				v27 = *(tjs_uint32 *)(line_vars.buffer + 4 * v26);
-				((tjs_uint32 *)(line_vars.buffer + 4 * v26))[0] = (((result + (v11 * ((*((tjs_uint8*)&(v27)+1)) - result) >> 16)) | ((((tjs_uint8)(v11 * ((tjs_uint32)(tjs_uint8)(*(tjs_uint32 *)(line_vars.buffer + 4 * v26) >> 16) - v47) >> 16)
-																																												+ (tjs_uint8)v47) | 0xFFFFFF00) << 8)) << 8) | (v40 + (v11 * ((*(tjs_uint32 *)(line_vars.buffer + 4 * v26) & 0xFF) - v40) >> 16));
-				v28 = ((tjs_uint32 *)(line_vars.buffer + 4 * (v26 + v31)))[0];
+				v27 = line_vars.buffer[v26];
+				line_vars.buffer[v26] = (((result + (v11 * ((*((tjs_uint8*)&(v27)+1)) - result) >> 16)) | ((((tjs_uint8)(v11 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v26] >> 16) - v47) >> 16)
+																																												+ (tjs_uint8)v47) | 0xFFFFFF00) << 8)) << 8) | (v40 + (v11 * ((line_vars.buffer[v26] & 0xFF) - v40) >> 16));
+				v28 = line_vars.buffer[v26 + v31];
 				v29 = (0xFFFF - (tjs_uint16)v11) * ((*((tjs_uint8*)&(v28)+1)) - result);
 				(*((tjs_uint8*)&(v26))) = v47 + ((0xFFFF - (tjs_uint16)v11) * ((tjs_uint32)(*((tjs_uint8*)&(v28)+2)) - v47) >> 16);
 				v30 = (0xFFFF - (tjs_uint16)v11) * ((tjs_uint8)v28 - v40);
 				v11 = v38 + v34;
-				*(tjs_uint32 *)(line_vars.buffer + 4 * v45) = (((result + (v29 >> 16)) | ((v26 | 0xFFFFFF00) << 8)) << 8) | (v40 + (v30 >> 16));
+				line_vars.buffer[v45] = (((result + (v29 >> 16)) | ((v26 | 0xFFFFFF00) << 8)) << 8) | (v40 + (v30 >> 16));
 				v24 = v37 + v42;
 				v42 += v37;
 				v34 += v38;
@@ -256,11 +256,11 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 			{
 				v18 = v15 + (v9 >> 16);
 				v19 = (tjs_uint16)v9;
-				v20 = *(tjs_uint32 *)(line_vars.buffer + 4 * v18);
-				*(tjs_uint32 *)(line_vars.buffer + 4 * v18) = (((result + (v19 * ((*((tjs_uint8*)&(v20)+1)) - result) >> 16)) | ((((tjs_uint8)(v19 * ((tjs_uint32)(tjs_uint8)(*(tjs_uint32 *)(line_vars.buffer + 4 * v18) >> 16) - v16) >> 16)
-																																												+ (tjs_uint8)v16) | 0xFFFFFF00) << 8)) << 8) | (v17 + (v19 * ((*(tjs_uint32 *)(line_vars.buffer + 4 * v18) & 0xFF) - v17) >> 16));
-				v21 = *(tjs_uint32 *)(line_vars.buffer + 4 * v18 + 4);
-				*(tjs_uint32 *)(line_vars.buffer + 4 * v18 + 4) = (((result + ((0xFFFF - v19) * ((*((tjs_uint8*)&(v21)+1)) - result) >> 16)) | ((((tjs_uint8)((0xFFFF - v19) * ((tjs_uint32)(tjs_uint8)(*(tjs_uint32 *)(line_vars.buffer + 4 * v18 + 4) >> 16) - v46) >> 16) + (tjs_uint8)v46) | 0xFFFFFF00) << 8)) << 8) | (v17 + ((0xFFFF - v19) * ((*(tjs_uint32 *)(line_vars.buffer + 4 * v18 + 4) & 0xFF) - v17) >> 16));
+				v20 = line_vars.buffer[v18];
+				line_vars.buffer[v18] = (((result + (v19 * ((*((tjs_uint8*)&(v20)+1)) - result) >> 16)) | ((((tjs_uint8)(v19 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18] >> 16) - v16) >> 16)
+																																												+ (tjs_uint8)v16) | 0xFFFFFF00) << 8)) << 8) | (v17 + (v19 * ((line_vars.buffer[v18] & 0xFF) - v17) >> 16));
+				v21 = line_vars.buffer[v18 + 1];
+				line_vars.buffer[v18 + 1] = (((result + ((0xFFFF - v19) * ((*((tjs_uint8*)&(v21)+1)) - result) >> 16)) | ((((tjs_uint8)((0xFFFF - v19) * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18 + 1] >> 16) - v46) >> 16) + (tjs_uint8)v46) | 0xFFFFFF00) << 8)) << 8) | (v17 + ((0xFFFF - v19) * ((line_vars.buffer[v18 + 1] & 0xFF) - v17) >> 16));
 				v9 = v35 + v44;
 				v15 = v33 + v41;
 				v44 += v35;
@@ -277,7 +277,7 @@ drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 	// TODO: Stub 1000915C 100021b0; possible replacement by LayerExDraw.drawLine
 	if (numparams == 0) return TJS_E_BADPARAMCOUNT;
 	tjs_int dest_width, dest_height, dest_pitch;
-	tjs_uint8 *dest_buffer;
+	tjs_uint32 *dest_buffer;
 	// layer: arg0 = tTJSVariant::AsObjectNoAddRef
 	iTJSDispatch2 *layer = param[0]->AsObjectNoAddRef();
 	// x0: arg1 = tTVInteger tTJSVariant::AsInteger() const
@@ -370,10 +370,10 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 			{
 				v20 = v18 + x1;
 				v18 += v19;
-				((tjs_uint32 *)(line_vars.buffer + 4 * v20))[0] = color;
+				line_vars.buffer[v20] = color;
 				v21 = v17 + x2;
 				v17 -= v19;
-				((tjs_uint32 *)(line_vars.buffer + 4 * v21))[0] = color;
+				line_vars.buffer[v21] = color;
 				v25 += v33;
 				if ( v25 >= 0 )
 				{
@@ -402,8 +402,8 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		v30 = v26 * result;
 		for (int i = 0; i < ((v5 + 1) >> 1); i += 1)
 		{
-			((tjs_uint32 *)(line_vars.buffer + 4 * (v13 + x1)))[0] = color;
-			((tjs_uint32 *)(line_vars.buffer + 4 * (v12 + x2)))[0] = color;
+			line_vars.buffer[v13 + x1] = color;
+			line_vars.buffer[v12 + x2] = color;
 			x1 += v27;
 			x2 -= v27;
 			v6 = y1;
@@ -421,7 +421,7 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		{
 LABEL_24:
 			result = x1 + v6 * result;
-			((tjs_uint32 *)(line_vars.buffer + 4 * result))[0] = color;
+			line_vars.buffer[result] = color;
 			return result;
 		}
 	}
@@ -433,7 +433,7 @@ drawLine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	// TODO: Stub 100091D8 10002010; possible replacement by LayerExDraw.drawLine
 	if (numparams < 6) return TJS_E_BADPARAMCOUNT;
 	tjs_int dest_width, dest_height, dest_pitch;
-	tjs_uint8 *dest_buffer;
+	tjs_uint32 *dest_buffer;
 	// layer: arg0 = tTJSVariant::AsObjectNoAddRef
 	iTJSDispatch2 *layer = param[0]->AsObjectNoAddRef();
 	// x0: arg1 = tTVInteger tTJSVariant::AsInteger() const

@@ -7,7 +7,7 @@
 #ifndef __LAYER_UTIL_H
 #define __LAYER_UTIL_H
 
-inline bool get_layer_pointers(iTJSDispatch2 *layerobj, uint8_t **buffer, tjs_int *width, tjs_int *height, tjs_int *pitch)
+inline bool get_layer_pointers(iTJSDispatch2 *layerobj, tjs_uint32 **buffer, tjs_int *width, tjs_int *height, tjs_int *pitch)
 {
 	bool success = true;
 
@@ -20,7 +20,7 @@ inline bool get_layer_pointers(iTJSDispatch2 *layerobj, uint8_t **buffer, tjs_in
 		}
 		else
 		{
-			*buffer = (uint8_t *)(tjs_int)var;
+			*buffer = (tjs_uint32 *)(size_t)(tTVInteger)var;
 		}
 	}
 

@@ -2,20 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ncbind.hpp"
+#include "ncbind/ncbind.hpp"
 #include "layer_util.h"
 
 static struct
 {
 	tjs_int src_width, src_height, src_pitch;
-	tjs_uint8 *src_buffer;
+	tjs_uint32 *src_buffer;
 	tjs_int dest_width, dest_height, dest_pitch;
-	tjs_uint8 *dest_buffer;
+	tjs_uint32 *dest_buffer;
 	iTJSDispatch2 *dest_dispatch;
 	bool open;
 	tjs_int type;
-	tjs_uint8 *buffer;
-	tjs_uint8 *buffer_aligned;
+	tjs_uint32 *buffer;
+	tjs_uint32 *buffer_aligned;
 	tjs_int pitch;
 } slideopen_args;
 
@@ -32,10 +32,10 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 	int v31;
 	int v32;
 
-	v26 = (tjs_uint32 *)slideopen_args.src_buffer;
+	v26 = slideopen_args.src_buffer;
 	v29 = (tjs_uint32)slideopen_args.dest_pitch / 4;
-	v3 = (tjs_uint32 *)slideopen_args.buffer_aligned;
-	v5 = (tjs_uint32 *)slideopen_args.dest_buffer;
+	v3 = slideopen_args.buffer_aligned;
+	v5 = slideopen_args.dest_buffer;
 	v28 = dest_width / 2;
 	if ( slideopen_args.open )
 	{
@@ -105,7 +105,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 	tjs_uint32* v32;
 	int v37;
 
-	v3 = (tjs_uint32 *)slideopen_args.dest_buffer;
+	v3 = slideopen_args.dest_buffer;
 	v5 = dest_height / 2;
 	v6 = (tjs_uint32)slideopen_args.dest_pitch / 4;
 	if ( a1 > v5 )
@@ -116,7 +116,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 	{
 		v37 = 0;
 		v7 = v5 - a1;
-		v32 = (tjs_uint32*)slideopen_args.buffer_aligned + a1 * v6;
+		v32 = slideopen_args.buffer_aligned + a1 * v6;
 		if ( v5 - a1 <= 0 )
 		{
 		}
@@ -135,7 +135,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 		}
 		v10 = a1 + v5;
 		v11 = v37;
-		v12 = (tjs_uint32*)slideopen_args.src_buffer + v6 * v7;
+		v12 = slideopen_args.src_buffer + v6 * v7;
 		if ( v37 < v10 )
 		{
 			v13 = v10 - v37;
@@ -150,7 +150,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 				v3 += v6;
 			}
 		}
-		v16 = (tjs_uint32*)slideopen_args.buffer_aligned + v6 * v5;
+		v16 = slideopen_args.buffer_aligned + v6 * v5;
 		for (int i = v11; i < dest_height; i += 1)
 		{
 			for (int j = 0; j < dest_width; j += 1)
@@ -165,7 +165,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 	{
 		v21 = a1 * v6;
 		v22 = v5 - a1;
-		v23 = (tjs_uint32*)slideopen_args.src_buffer + a1 * v6;
+		v23 = slideopen_args.src_buffer + a1 * v6;
 		for (int i = 0; i < v22; i += 1)
 		{
 			for (int j = 0; j < dest_width; j += 1)
@@ -176,7 +176,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 			v3 += v6;
 		}
 		v26 = v3 + 2 * v21;
-		v27 = (tjs_uint32*)slideopen_args.src_buffer + v6 * v5;
+		v27 = slideopen_args.src_buffer + v6 * v5;
 		for (int i = a1 + v5; i < dest_height; i += 1)
 		{
 			for (int j = 0; j < dest_width; j += 1)
@@ -218,8 +218,8 @@ static int sub_100013D0(int a1, int dest_width, int dest_height)
 	tjs_uint32* v35;
 	int v38;
 
-	v26 = (tjs_uint32 *)slideopen_args.dest_buffer;
-	v35 = (tjs_uint32 *)slideopen_args.src_buffer;
+	v26 = slideopen_args.dest_buffer;
+	v35 = slideopen_args.src_buffer;
 	v24 = slideopen_args.dest_pitch / 4;
 	v4 = dest_height / 2;
 	v31 = dest_width / 2;
@@ -231,9 +231,9 @@ static int sub_100013D0(int a1, int dest_width, int dest_height)
 	v7 = a1 - a1 / 2;
 	if ( !slideopen_args.open )
 		return result;
-	v29 = (tjs_uint32*)slideopen_args.buffer_aligned + (v7 + v24 * v6);
+	v29 = slideopen_args.buffer_aligned + (v7 + v24 * v6);
 	v8 = v24 * result;
-	v28 = (tjs_uint32*)slideopen_args.buffer_aligned + (v31 + v4 + v24 * result + v38);
+	v28 = slideopen_args.buffer_aligned + (v31 + v4 + v24 * result + v38);
 	if ( v6 >= 0 )
 	{
 		if ( v6 < dest_height )
@@ -245,7 +245,7 @@ static int sub_100013D0(int a1, int dest_width, int dest_height)
 		v6 += dest_height;
 	}
 	v9 = v7 + v24 * v6;
-	v29 = (tjs_uint32*)slideopen_args.buffer_aligned + v9;
+	v29 = slideopen_args.buffer_aligned + v9;
 LABEL_7:
 	if ( result >= 0 )
 	{
@@ -263,7 +263,7 @@ LABEL_7:
 		v38 -= dest_height;
 	}
 	v8 = v24 * result;
-	v28 = (tjs_uint32*)slideopen_args.buffer_aligned + (v31 + v34 + v24 * result + v10);
+	v28 = slideopen_args.buffer_aligned + (v31 + v34 + v24 * result + v10);
 LABEL_12:
 	if ( dest_height > 0 )
 	{
@@ -328,7 +328,7 @@ LABEL_33:
 				v23 = v32 + v21;
 LABEL_37:
 				v33 = v23;
-				v28 = (tjs_uint32*)slideopen_args.buffer_aligned + (v31 + v34 + v10 + v23);
+				v28 = slideopen_args.buffer_aligned + (v31 + v34 + v10 + v23);
 				goto LABEL_38;
 			}
 			if ( result >= dest_height )
@@ -374,9 +374,9 @@ static int sub_100016C0(int a1, int dest_width, int dest_height)
 	int v36;
 	tjs_uint32* v39;
 
-	v27 = (tjs_uint32*)slideopen_args.dest_buffer;
-	v39 = (tjs_uint32*)slideopen_args.src_buffer;
-	v24 = (tjs_uint32*)slideopen_args.buffer_aligned;
+	v27 = slideopen_args.dest_buffer;
+	v39 = slideopen_args.src_buffer;
+	v24 = slideopen_args.buffer_aligned;
 	v4 = dest_height / 2;
 	v30 = dest_width / 2;
 	v34 = dest_height / 2;
@@ -389,9 +389,9 @@ static int sub_100016C0(int a1, int dest_width, int dest_height)
 	v8 = a1 - a1 / 2;
 	if ( !slideopen_args.open )
 		return result;
-	v28 = (tjs_uint32*)slideopen_args.buffer_aligned + (v32 + v6 * v5);
+	v28 = slideopen_args.buffer_aligned + (v32 + v6 * v5);
 	v9 = v25 * result;
-	v26 = (tjs_uint32*)slideopen_args.buffer_aligned + (v30 + v8 + v25 * result - v4);
+	v26 = slideopen_args.buffer_aligned + (v30 + v8 + v25 * result - v4);
 	if ( v5 >= 0 )
 	{
 		if ( v5 < dest_height )
@@ -402,7 +402,7 @@ static int sub_100016C0(int a1, int dest_width, int dest_height)
 	{
 		v5 += dest_height;
 	}
-	v28 = (tjs_uint32*)slideopen_args.buffer_aligned + (v32 + v25 * v5);
+	v28 = slideopen_args.buffer_aligned + (v32 + v25 * v5);
 LABEL_7:
 	if ( result >= 0 )
 	{
@@ -417,7 +417,7 @@ LABEL_7:
 		result += dest_height;
 	}
 	v9 = v25 * result;
-	v26 = (tjs_uint32*)slideopen_args.buffer_aligned + (v30 + v8 + v25 * result - v34);
+	v26 = slideopen_args.buffer_aligned + (v30 + v8 + v25 * result - v34);
 LABEL_12:
 	if ( dest_height > 0 )
 	{
@@ -594,14 +594,14 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	}
 	if (slideopen_args.open)
 	{
-		slideopen_args.buffer = new tjs_uint8[4 * slideopen_args.dest_height * slideopen_args.dest_width + 4];
-		slideopen_args.buffer_aligned = (tjs_uint8*)((tjs_uint8 *)slideopen_args.buffer - ((size_t)slideopen_args.buffer & 3) + 4);
+		slideopen_args.buffer = new tjs_uint32[slideopen_args.dest_height * slideopen_args.dest_width + 1];
+		slideopen_args.buffer_aligned = (tjs_uint32*)((tjs_uint8 *)slideopen_args.buffer - ((size_t)slideopen_args.buffer & 3) + 4);
 		if (slideopen_args.dest_pitch < 1)
 		{
-			slideopen_args.buffer_aligned -= slideopen_args.dest_pitch * (slideopen_args.dest_height - 1);
+			slideopen_args.buffer_aligned = (tjs_uint32*)((tjs_uint8 *)(slideopen_args.buffer_aligned) - (slideopen_args.dest_pitch * (slideopen_args.dest_height - 1)));
 		}
-		tjs_uint32 *v21 = (tjs_uint32 *)slideopen_args.dest_buffer;
-		tjs_uint32 *v22 = (tjs_uint32 *)slideopen_args.buffer_aligned;
+		tjs_uint32 *v21 = slideopen_args.dest_buffer;
+		tjs_uint32 *v22 = slideopen_args.buffer_aligned;
 		tjs_uint32 v33 = (tjs_uint32)slideopen_args.dest_pitch / 4;
 		for (tjs_int i = 0; i < slideopen_args.dest_height; i += 1)
 		{
