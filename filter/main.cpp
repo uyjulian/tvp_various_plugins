@@ -187,9 +187,8 @@ initHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	return TJS_S_OK;
 }
 
-int sub_100027C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
+static void sub_100027C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_int a3, tjs_int dest_width, tjs_int dest_buffer_offset, tjs_int src_buffer_offset)
 {
-	int result;
 	int v5;
 	int v6;
 	int v7;
@@ -199,22 +198,80 @@ int sub_100027C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
 	tjs_uint32 *v11;
 	int v12;
 
-	result = a3;
 	v5 = a3 >> 1;
 	if ( a3 < 0 )
 	{
-		a2 -= v5;
-		v6 = v5 + a4 - 2;
+		src_buffer_offset -= v5;
+		v6 = dest_width + v5 - 2;
 	}
 	else
 	{
-		a1 += v5;
-		v6 = a4 - v5 - 2;
+		dest_buffer_offset += v5;
+		v6 = dest_width - v5 - 2;
 	}
+
+	tjs_uint32 *a1 = dest_buffer + dest_buffer_offset;
+	tjs_uint32 *a2 = src_buffer + src_buffer_offset;
+
 	*a1 = *a2;
+#if 0
+	v7 = v6 + 3;
+#else
 	v7 = (v6 + 3) >> 2;
+#endif
 	v8 = a1 + 1;
 	v9 = a2 + 1;
+#if 0
+	if ( a3 & 1 )
+	{
+		v10 = v8 + 1;
+		v11 = v9 + 1;
+		v12 = v7 - 1;
+		for (tjs_int i = 1; i < v12 - 1; i += 1)
+		{
+			v10[i] = ((v11[i] >> 2) & 0x3F3F3F3F)
+					 + (((tjs_uint32)v10[i] >> 1) & 0x7F7F7F7F)
+					 + ((v11[i - 1] >> 2) & 0x3F3F3F3F);
+		}
+		//v10[v12] = ((v11[v12] >> 1) & 0x7F7F7F7F) + (((tjs_uint32)v10[v12] >> 1) & 0x7F7F7F7F);
+	}
+	else
+	{
+		for (tjs_int i = 1; i < v7 - 1; i += 1)
+		{
+			v8[i] = ((v9[i] >> 1) & 0x7F7F7F7F) + (((tjs_uint32)v8[i] >> 1) & 0x7F7F7F7F);
+		}
+	}
+#elif 0
+	if ( a3 & 1 )
+	{
+		v10 = v8 + 1;
+		v11 = v9 + 1;
+		v12 = v7 - 1;
+		while ( 1 )
+		{
+			*v10 = ((*v11 >> 2) & 0x3F3F3F3F)
+					 + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F)
+					 + ((*(v11 - 1) >> 2) & 0x3F3F3F3F);
+			++v10;
+			++v11;
+			if ( !--v12 )
+				break;
+		}
+		*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
+	}
+	else
+	{
+		while ( 1 )
+		{
+			*v8 = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
+			++v8;
+			++v9;
+			if ( !--v7 )
+				break;
+		}
+	}
+#else
 	if ( a3 & 1 )
 	{
 		v10 = v8 + 1;
@@ -261,8 +318,7 @@ LABEL_7:
 			default:
 				break;
 		}
-		result = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
-		*v10 = result;
+		*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
 	}
 	else
 	{
@@ -285,8 +341,7 @@ LABEL_16:
 					++v8;
 					++v9;
 LABEL_13:
-					result = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
-					*v8 = result;
+					*v8 = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
 					++v8;
 					++v9;
 					if ( !--v7 )
@@ -298,15 +353,14 @@ LABEL_14:
 				}
 				break;
 			default:
-				return result;
+				return;
 		}
 	}
-	return result;
+#endif
 }
 
-int sub_100029C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
+static void sub_100029C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_int a3, tjs_int dest_width, tjs_int dest_buffer_offset, tjs_int src_buffer_offset)
 {
-	int result;
 	int v5;
 	int v6;
 	int v7;
@@ -316,22 +370,76 @@ int sub_100029C0(tjs_uint32 *a1, tjs_uint32 *a2, int a3, int a4)
 	tjs_uint32 *v11;
 	int v12;
 
-	result = a3;
 	v5 = a3 >> 1;
 	if ( a3 < 0 )
 	{
-		a2 -= v5;
-		v6 = v5 + a4 - 2;
+		src_buffer_offset -= v5;
+		v6 = dest_width + v5 - 2;
 	}
 	else
 	{
-		a1 += v5;
-		v6 = a4 - v5 - 2;
+		dest_buffer_offset += v5;
+		v6 = dest_width - v5 - 2;
 	}
+
+	tjs_uint32 *a1 = dest_buffer + dest_buffer_offset;
+	tjs_uint32 *a2 = src_buffer + src_buffer_offset;
+
 	*a1 = *a2;
+#if 0
+	v7 = v6 + 3;
+#else
 	v7 = (v6 + 3) >> 2;
+#endif
 	v8 = a1 + 1;
 	v9 = a2 + 1;
+#if 0
+	if ( a3 & 1 )
+	{
+		v10 = v8 + 1;
+		v11 = v9 + 1;
+		v12 = v7 - 1;
+		for (tjs_int i = 1; i < v12 - 1; i += 1)
+		{
+			v10[i] = ((v11[i] >> 1) & 0x7F7F7F7F) + ((v11[i - 1] >> 1) & 0x7F7F7F7F);
+		}
+		//v10[v12] = ((v11[v12] >> 1) & 0x7F7F7F7F) + (((tjs_uint32)v10[v12] >> 1) & 0x7F7F7F7F);
+	}
+	else
+	{
+		for (tjs_int i = 1; i < v7 - 1; i += 1)
+		{
+			v8[i] = v9[i];
+		}
+	}
+#elif 0
+	if ( a3 & 1 )
+	{
+		v10 = v8 + 1;
+		v11 = v9 + 1;
+		v12 = v7 - 1;
+		while ( 1 )
+		{
+			*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + ((*(v11 - 1) >> 1) & 0x7F7F7F7F);
+			++v10;
+			++v11;
+			if ( !--v12 )
+				break;
+		}
+		*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
+	}
+	else
+	{
+		while ( 1 )
+		{
+			*v8 = *v9;
+			++v8;
+			++v9;
+			if ( !--v7 )
+				break;
+		}
+	}
+#else
 	if ( a3 & 1 )
 	{
 		v10 = v8 + 1;
@@ -370,8 +478,7 @@ LABEL_7:
 			default:
 				break;
 		}
-		result = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
-		*v10 = result;
+		*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
 	}
 	else
 	{
@@ -394,7 +501,6 @@ LABEL_16:
 					++v8;
 					++v9;
 LABEL_13:
-					result = *v9;
 					*v8 = *v9;
 					++v8;
 					++v9;
@@ -407,10 +513,10 @@ LABEL_14:
 				}
 				break;
 			default:
-				return result;
+				return;
 		}
 	}
-	return result;
+#endif
 }
 static tjs_error TJS_INTF_METHOD
 doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
@@ -440,7 +546,7 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 	tjs_real per = dict.getRealValue(TJS_W("per"), 0.0);
 	// bgcolor: tTJSVariant::operator tjs_int() const; unused
 	// blend: tTJSVariant::operator tjs_int() const
-	int (*v78)(tjs_uint32 *, tjs_uint32 *, int, int);
+	void (*v78)(tjs_uint32 *, tjs_uint32 *, tjs_int, tjs_int, tjs_int, tjs_int);
 	v78 = sub_100029C0;
 	tjs_int blend = dict.getIntValue(TJS_W("blend"), 0);
 	if (blend)
@@ -507,7 +613,7 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 							}
 						}
 					}
-					v78(&dest_buffer[v21 * i], &src_buffer[(v74 * i) + v32], (tjs_int)(tjs_int64)((tjs_real)v66 * haze_args.waves[(tjs_int64)v79 & 0x3FFF] * per) >> 20, dest_width);
+					v78(dest_buffer, src_buffer, (tjs_int)(tjs_int64)((tjs_real)v66 * haze_args.waves[(tjs_int64)v79 & 0x3FFF] * per) >> 20, dest_width, v21 * i, (v74 * i) + v32);
 					v79 += haze_args.cycle;
 					v66 += v81;
 				}
@@ -543,7 +649,7 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 						}
 					}
 				}
-				v78(&dest_buffer[v21 * i], &src_buffer[(v74 * i) + v40], (tjs_int)(tjs_int64)((tjs_real)v60 * haze_args.waves[(tjs_int64)v79 & 0x3FFF] * per) >> 20, dest_width);
+				v78(dest_buffer, src_buffer, (tjs_int)(tjs_int64)((tjs_real)v60 * haze_args.waves[(tjs_int64)v79 & 0x3FFF] * per) >> 20, dest_width, v21 * i, (v74 * i) + v40);
 				v79 += haze_args.cycle;
 				v60 += v82;
 			}
@@ -565,7 +671,7 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 						}
 					}
 				}
-				v78(&dest_buffer[v70 * i], &src_buffer[(v74 * i) + v45], (tjs_int)(tjs_int64)((tjs_real)v61 * haze_args.waves[(tjs_int64)v79 & 0x3FFF] * per) >> 20, dest_width);
+				v78(dest_buffer, src_buffer, (tjs_int)(tjs_int64)((tjs_real)v61 * haze_args.waves[(tjs_int64)v79 & 0x3FFF] * per) >> 20, dest_width, v70 * i, (v74 * i) + v45);
 				v79 += haze_args.cycle;
 				v61 += v83;
 			}
@@ -590,7 +696,7 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 						}
 					}
 				}
-				v78(&dest_buffer[v21 * i], &src_buffer[(v74 * i) + v26], (tjs_int64)(per * haze_args.waves[(tjs_int64)v79 & 0x3FFF]), dest_width);
+				v78(dest_buffer, src_buffer, (tjs_int64)(per * haze_args.waves[(tjs_int64)v79 & 0x3FFF]), dest_width, v21 * i, (v74 * i) + v26);
 				v79 += haze_args.cycle;
 			}
 			v22 = dest_height;
