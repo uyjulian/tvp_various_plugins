@@ -19,6 +19,49 @@ static struct
 	tjs_int pitch;
 } slideopen_args;
 
+#if 0
+static int sub_10001000(int a1, int dest_width, int dest_height)
+{
+	int v28;
+	int v29;
+
+	v29 = (slideopen_args.dest_pitch & 0x7FFFFFFF) >> 2;
+	v28 = dest_width >> 1;
+	if ( slideopen_args.open )
+	{
+		for (int i = 0; i < dest_height; i += 1)
+		{
+			for (int j = 0; j < v28 - a1; j += 1)
+			{
+				slideopen_args.dest_buffer[(v29 * i) + j] = slideopen_args.buffer_aligned[(v29 * i) + (j + a1)];
+			}
+			for (int j = v28 - a1; j < v28 + a1; j += 1)
+			{
+				slideopen_args.dest_buffer[(v29 * i) + j] = slideopen_args.src_buffer[(v29 * i) + j];
+			}
+			for (int j = v28 + a1; j < dest_width; j += 1)
+			{
+				slideopen_args.dest_buffer[(v29 * i) + j] = slideopen_args.buffer_aligned[(v29 * i) + (j - a1)];
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < dest_height; i += 1)
+		{
+			for (int j = a1; j < v28; j += 1)
+			{
+				slideopen_args.dest_buffer[(v29 * i) + j] = slideopen_args.src_buffer[(v29 * i) + j - a1];
+			}
+			for (int j = v28 + a1; j < dest_width; j += 1)
+			{
+				slideopen_args.dest_buffer[(v29 * i) + j] = slideopen_args.src_buffer[(v29 * i) + v28 + (j - (v28 + a1))];
+			}
+		}
+	}
+	return 0;
+}
+#else
 static int sub_10001000(int a1, int dest_width, int dest_height)
 {
 	tjs_uint32* v3;
@@ -85,6 +128,80 @@ static int sub_10001000(int a1, int dest_width, int dest_height)
 	}
 	return 0;
 }
+#endif
+
+#if 0
+static int sub_100011B0(int a1, int dest_width, int dest_height)
+{
+	int v5;
+	int v6;
+	int v7;
+	int v10;
+	int v11;
+	int v37;
+
+	v5 = dest_height >> 1;
+	v6 = (slideopen_args.dest_pitch & 0x7FFFFFFF) >> 2;
+	if ( a1 > v5 )
+	{
+		a1 = v5;
+	}
+	if ( slideopen_args.open )
+	{
+		v37 = 0;
+		v7 = v5 - a1;
+		if ( v7 > 0 )
+		{
+			v37 = v7;
+			for (int i = a1; i < v5; i += 1)
+			{
+				for (int j = 0; j < dest_width; j += 1)
+				{
+					slideopen_args.dest_buffer[(v6 * i) + j] = slideopen_args.buffer_aligned[(v6 * i) + (a1 * v6) + j];
+				}
+			}
+		}
+		v10 = a1 + v5;
+		v11 = v37;
+		if ( v37 < v10 )
+		{
+			v11 = v10;
+			for (int i = v37; i < v10; i += 1)
+			{
+				for (int j = 0; j < dest_width; j += 1)
+				{
+					slideopen_args.dest_buffer[(v6 * i) + j] = slideopen_args.src_buffer[(v6 * i) + (v6 * v7) + j];
+				}
+			}
+		}
+		for (int i = v11; i < dest_height; i += 1)
+		{
+			for (int j = 0; j < dest_width; j += 1)
+			{
+				slideopen_args.dest_buffer[(v6 * i) + j] = slideopen_args.buffer_aligned[(v6 * i) + (v6 * v5) + j];
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < v5 - a1; i += 1)
+		{
+			for (int j = 0; j < dest_width; j += 1)
+			{
+				slideopen_args.dest_buffer[(v6 * i) + j] = slideopen_args.src_buffer[(v6 * i) + (a1 * v6) + j];
+			}
+		}
+		for (int i = a1 + v5; i < dest_height; i += 1)
+		{
+			for (int j = 0; j < dest_width; j += 1)
+			{
+				slideopen_args.dest_buffer[(v6 * i) + (2 * (a1 * v6)) + j] = slideopen_args.src_buffer[(v6 * i) + (v6 * v5) + j];
+			}
+		}
+	}
+	return 0;
+}
+#else
 
 static int sub_100011B0(int a1, int dest_width, int dest_height)
 {
@@ -189,6 +306,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 	}
 	return 0;
 }
+#endif
 
 #if 0
 static int sub_100013D0(int a1, int dest_width, int dest_height)
