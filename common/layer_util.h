@@ -20,7 +20,7 @@ inline bool get_layer_pointers(iTJSDispatch2 *layerobj, tjs_uint32 **buffer, tjs
 		}
 		else
 		{
-			*buffer = (tjs_uint32 *)(size_t)(tTVInteger)var;
+			*buffer = reinterpret_cast<tjs_uint32 *>(var.AsInteger());
 		}
 	}
 
