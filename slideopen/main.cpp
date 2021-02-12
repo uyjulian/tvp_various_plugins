@@ -190,6 +190,7 @@ static int sub_100011B0(int a1, int dest_width, int dest_height)
 	return 0;
 }
 
+#if 0
 static int sub_100013D0(int a1, int dest_width, int dest_height)
 {
 	int v4;
@@ -199,8 +200,6 @@ static int sub_100013D0(int a1, int dest_width, int dest_height)
 	int v8;
 	int v9;
 	int v10;
-	int v11;
-	int v12;
 	int v14;
 	int v16;
 	int v17;
@@ -265,86 +264,282 @@ LABEL_7:
 	v8 = v24 * result;
 	v28 = slideopen_args.buffer_aligned + (v31 + v34 + v24 * result + v10);
 LABEL_12:
-	if ( dest_height > 0 )
+	v33 = v8;
+	v32 = dest_height * v24;
+	for (int i = 0; i < dest_height; i += 1)
 	{
-		v33 = v8;
-		v32 = dest_height * v24;
-		for (int i = 0; i < dest_height; i += 1)
+		for (int j = 0; j < v30; j += 1)
 		{
-			v11 = v30;
-			v12 = v30;
-			for (int j = 0; j < v30; j += 1)
-			{
-				v26[j] = v29[j];
-			}
-			v11 = v30;
-			v14 = v11 + 2 * a1;
-			if ( v14 > dest_width )
-				v14 = dest_width;
-			if ( v12 < v14 )
-			{
-				v16 = v35 - v26;
-				v17 = v14 - v12;
-				v12 += v17;
-				for (int j = v12; j < v14; j += 1)
-				{
-					v26[j] = v26[j - v12 + v16];
-				}
-				v10 = v38;
-			}
-			for (int j = v12; j < dest_width; j += 1)
-			{
-				v26[j] = v28[j - v12];
-			}
-			v30 -= 1;
-			v26 += v24;
-			v6 += 1;
-			v10 -= 1;
-			v29 += v24;
-			result += 1;
-			v38 = v10;
-			v28 += v24 - 1;
-			v21 = v24 + v33;
-			v33 += v24;
-			v35 += v24;
-			if ( v6 >= 0 )
-			{
-				if ( v6 < dest_height )
-					goto LABEL_33;
-				v6 -= dest_height;
-				v29 -= v32;
-			}
-			else
-			{
-				v6 += dest_height;
-				v29 += v32;
-			}
+			v26[j] = v29[j];
+		}
+		v14 = v30 + 2 * a1;
+		if ( v14 > dest_width )
+		{
+			v14 = dest_width;
+		}
+		v16 = v35 - v26;
+		v17 = v14 - v30;
+		for (int j = v30; j < v14; j += 1)
+		{
+			v26[j] = v26[j + v16];
+		}
+		v10 = v38;
+		for (int j = v14; j < dest_width; j += 1)
+		{
+			v26[j] = v28[j - v14];
+		}
+		v30 -= 1;
+		v26 += v24;
+		v6 += 1;
+		v10 -= 1;
+		v29 += v24;
+		result += 1;
+		v38 = v10;
+		v28 += v24 - 1;
+		v21 = v24 + v33;
+		v33 += v24;
+		v35 += v24;
+		if ( v6 >= 0 )
+		{
+			if ( v6 < dest_height )
+				goto LABEL_33;
+			v6 -= dest_height;
+			v29 -= v32;
+		}
+		else
+		{
+			v6 += dest_height;
+			v29 += v32;
+		}
 LABEL_33:
-			if ( result < 0 )
-			{
-				v10 -= dest_height;
-				result += dest_height;
-				v38 = v10;
-				v23 = v32 + v21;
+		if ( result < 0 )
+		{
+			v10 -= dest_height;
+			result += dest_height;
+			v38 = v10;
+			v23 = v32 + v21;
 LABEL_37:
-				v33 = v23;
-				v28 = slideopen_args.buffer_aligned + (v31 + v34 + v10 + v23);
-				goto LABEL_38;
-			}
-			if ( result >= dest_height )
-			{
-				v10 += dest_height;
-				result -= dest_height;
-				v38 = v10;
-				v23 = v21 - v32;
-				goto LABEL_37;
-			}
+			v33 = v23;
+			v28 = slideopen_args.buffer_aligned + (v31 + v34 + v10 + v23);
+			goto LABEL_38;
+		}
+		if ( result >= dest_height )
+		{
+			v10 += dest_height;
+			result -= dest_height;
+			v38 = v10;
+			v23 = v21 - v32;
+			goto LABEL_37;
 		}
 	}
 LABEL_38:
 	return result;
 }
+#else
+static int sub_100013D0(int a1, int dest_width, int dest_height)
+{
+	int v3;
+	int v4;
+	int result;
+	int v6;
+	int v7;
+	int v8;
+	int v9;
+	int v10;
+	int v11;
+	int v12;
+	tjs_uint32 *v13;
+	int v14;
+	int v15;
+	int v16;
+	int v17;
+	tjs_uint32 *v18;
+	tjs_uint32 *v19;
+	int v20;
+	int v21;
+	tjs_uint32 *v22;
+	int v23;
+	int v24;
+	tjs_uint32 *v25;
+	tjs_uint32 *v26;
+	tjs_uint32 *v27;
+	tjs_uint32 *v28;
+	tjs_uint32 *v29;
+	int v30;
+	int v31;
+	int v32;
+	int v33;
+	int v34;
+	tjs_uint32 *v35;
+	int v36;
+	int v37;
+	int dest_heighta;
+	tjs_uint32 *dest_heightb;
 
+	v26 = slideopen_args.dest_buffer;
+	v35 = slideopen_args.src_buffer;
+	v3 = dest_height;
+	v24 = slideopen_args.dest_pitch / 4;
+	v25 = slideopen_args.buffer_aligned;
+	v4 = dest_height / 2;
+	v31 = dest_width / 2;
+	v34 = dest_height / 2;
+	v30 = dest_width / 2 + dest_height / 2 - a1;
+	result = a1 / -2;
+	v6 = a1 / 2;
+	dest_heighta = a1 / -2 + a1;
+	v7 = a1 - a1 / 2;
+	if ( !slideopen_args.open )
+		return result;
+	v29 = &slideopen_args.buffer_aligned[v7 + v24 * v6];
+	v27 = &slideopen_args.buffer_aligned[v7 + v24 * v6];
+	v8 = v24 * result;
+	v28 = &slideopen_args.buffer_aligned[v31 + v4 + v24 * result + dest_heighta];
+	if ( v6 >= 0 )
+	{
+		if ( v6 < v3 )
+			goto LABEL_7;
+		v6 -= v3;
+	}
+	else
+	{
+		v6 += v3;
+	}
+	v9 = v7 + v24 * v6;
+	v29 = &slideopen_args.buffer_aligned[v9];
+	v27 = &slideopen_args.buffer_aligned[v9];
+LABEL_7:
+	if ( result >= 0 )
+	{
+		v10 = a1 / -2 + a1;
+		if ( result < v3 )
+			goto LABEL_12;
+		v10 = v3 + dest_heighta;
+		result -= v3;
+		dest_heighta += v3;
+	}
+	else
+	{
+		v10 = dest_heighta - v3;
+		result += v3;
+		dest_heighta -= v3;
+	}
+	v8 = v24 * result;
+	v28 = &slideopen_args.buffer_aligned[v31 + v34 + v24 * result + v10];
+LABEL_12:
+	if ( v3 <= 0 )
+		return result;
+	v33 = v8;
+	v32 = v3 * v24;
+	v37 = v3;
+	do
+	{
+		v11 = v30;
+		v12 = 0;
+		if ( v30 > 0 )
+		{
+			v13 = v26;
+			v36 = v30;
+			v12 = v30;
+			do
+			{
+				++v13;
+				*(v13 - 1) = *(tjs_uint32 *)((tjs_uint8 *)v27 + ((tjs_uint8 *)v13 - (tjs_uint8 *)v26) - 4);
+				--v36;
+			}
+			while ( v36 );
+			v11 = v30;
+		}
+		v14 = v11 + 2 * a1;
+		v15 = dest_width;
+		if ( v14 > dest_width )
+			v14 = dest_width;
+		if ( v12 < v14 )
+		{
+			v16 = (tjs_uint8 *)v35 - (tjs_uint8 *)v26;
+			v17 = v14 - v12;
+			v18 = &v26[v12];
+			v12 += v17;
+			while ( 1 )
+			{
+				*v18 = *(tjs_uint32 *)((tjs_uint8 *)v18 + v16);
+				++v18;
+				if ( !--v17 )
+					break;
+				v16 = (tjs_uint8 *)v35 - (tjs_uint8 *)v26;
+			}
+			v10 = dest_heighta;
+			v15 = dest_width;
+		}
+		if ( v12 < v15 )
+		{
+			v19 = &v26[v12];
+			dest_heightb = v28;
+			v20 = dest_width - v12;
+			do
+			{
+				++v19;
+				*(v19 - 1) = *dest_heightb;
+				--v20;
+				++dest_heightb;
+			}
+			while ( v20 );
+		}
+		--v30;
+		v26 += v24;
+		++v6;
+		v27 += v24;
+		--v10;
+		v29 += v24;
+		++result;
+		dest_heighta = v10;
+		v28 = &v28[v24 - 1];
+		v21 = v24 + v33;
+		v33 += v24;
+		v35 += v24;
+		if ( v6 >= 0 )
+		{
+			if ( v6 < v3 )
+				goto LABEL_33;
+			v6 -= v3;
+			v22 = &v29[-v32];
+		}
+		else
+		{
+			v6 += v3;
+			v22 = &v29[v32];
+		}
+		v29 = v22;
+		v27 = v22;
+LABEL_33:
+		if ( result < 0 )
+		{
+			v10 -= v3;
+			result += v3;
+			dest_heighta = v10;
+			v23 = v32 + v21;
+LABEL_37:
+			v33 = v23;
+			v28 = &v25[v31 + v34 + v10 + v23];
+			goto LABEL_38;
+		}
+		if ( result >= v3 )
+		{
+			v10 += v3;
+			result -= v3;
+			dest_heighta = v10;
+			v23 = v21 - v32;
+			goto LABEL_37;
+		}
+LABEL_38:
+		--v37;
+	}
+	while ( v37 );
+	return result;
+}
+#endif
+
+#if 0
 static int sub_100016C0(int a1, int dest_width, int dest_height)
 {
 	int v4;
@@ -357,7 +552,6 @@ static int sub_100016C0(int a1, int dest_width, int dest_height)
 	int v13;
 	tjs_uint32* v15;
 	int v16;
-	int v17;
 	int v21;
 	int v23;
 	tjs_uint32* v24;
@@ -371,7 +565,6 @@ static int sub_100016C0(int a1, int dest_width, int dest_height)
 	int v32;
 	int v33;
 	int v34;
-	int v36;
 	tjs_uint32* v39;
 
 	v27 = slideopen_args.dest_buffer;
@@ -419,84 +612,276 @@ LABEL_7:
 	v9 = v25 * result;
 	v26 = slideopen_args.buffer_aligned + (v30 + v8 + v25 * result - v34);
 LABEL_12:
-	if ( dest_height > 0 )
+	v33 = v9;
+	v31 = dest_height * v25;
+	for (int i = 0; i < dest_height; i += 1)
 	{
-		v33 = v9;
-		v31 = dest_height * v25;
-		for (int i = 0; i < dest_height; i += 1)
+		for (int j = 0; j < v29; j += 1)
 		{
-			v11 = v29;
-			for (int j = 0; j < v29; j += 1)
-			{
-				v27[j] = v28[j];
-			}
-			v13 = v29 + 2 * a1;
-			v36 = v13;
-			if ( v13 > dest_width )
-			{
-				v13 = dest_width;
-				v36 = dest_width;
-			}
-			if ( v11 < v13 )
-			{
-				v15 = v27 + v11;
-				v16 = v39 - v27;
-				v17 = v36 - v11;
-				v11 += v17;
-				for (int j = 0; j < v17; j += 1)
-				{
-					v15[j] = v15[v16];
-				}
-			}
-			for (int j = v11; j < dest_width; j += 1)
-			{
-				v27[j] = v26[j - v11];
-			}
-			v29 += 1;
-			v27 += v25;
-			v5 += 1;
-			v8 += 1;
-			v28 += v25;
-			result += 1;
-			v26 += v25 + 1;
-			v21 = v25 + v33;
-			v33 += v25;
-			v39 += v25;
-			if ( v5 >= 0 )
-			{
-				if ( v5 < dest_height )
-					goto LABEL_33;
-				v5 -= dest_height;
-				v28 -= v31;
-			}
-			else
-			{
-				v5 += dest_height;
-				v28 += v31;
-			}
+			v27[j] = v28[j];
+		}
+		v13 = v29 + 2 * a1;
+		if ( v13 > dest_width )
+		{
+			v13 = dest_width;
+		}
+		v16 = v39 - v27;
+		for (int j = v29; j < v13; j += 1)
+		{
+			v27[j] = v27[j + v16];
+		}
+		for (int j = v13; j < dest_width; j += 1)
+		{
+			v27[j] = v26[j - v13];
+		}
+		v29 += 1;
+		v27 += v25;
+		v5 += 1;
+		v8 += 1;
+		v28 += v25;
+		result += 1;
+		v26 += v25 + 1;
+		v21 = v25 + v33;
+		v33 += v25;
+		v39 += v25;
+		if ( v5 >= 0 )
+		{
+			if ( v5 < dest_height )
+				goto LABEL_33;
+			v5 -= dest_height;
+			v28 -= v31;
+		}
+		else
+		{
+			v5 += dest_height;
+			v28 += v31;
+		}
 LABEL_33:
-			if ( result < 0 )
-			{
-				v8 += dest_height;
-				result += dest_height;
-				v23 = v31 + v21;
+		if ( result < 0 )
+		{
+			v8 += dest_height;
+			result += dest_height;
+			v23 = v31 + v21;
 LABEL_37:
-				v33 = v23;
-				v26 = v24 + (v30 + v8 + v23 - v34);
-				goto LABEL_38;
-			}
-			if ( result >= dest_height )
-			{
-				v8 -= dest_height;
-				result -= dest_height;
-				v23 = v21 - v31;
-				goto LABEL_37;
-			}
+			v33 = v23;
+			v26 = v24 + (v30 + v8 + v23 - v34);
+			goto LABEL_38;
+		}
+		if ( result >= dest_height )
+		{
+			v8 -= dest_height;
+			result -= dest_height;
+			v23 = v21 - v31;
+			goto LABEL_37;
 		}
 	}
 LABEL_38:
 	return result;
 }
+#else
+static int sub_100016C0(int a1, int dest_width, int dest_height)
+{
+	int v3;
+	int v4;
+	int v5;
+	unsigned int v6;
+	int result;
+	int v8;
+	int v9;
+	int v10;
+	int v11;
+	tjs_uint32 *v12;
+	int v13;
+	int v14;
+	tjs_uint32 *v15;
+	int v16;
+	int v17;
+	tjs_uint32 *v18;
+	tjs_uint32 *v19;
+	int v20;
+	int v21;
+	tjs_uint32 *v22;
+	int v23;
+	tjs_uint32 *v24;
+	unsigned int v25;
+	tjs_uint32 *v26;
+	tjs_uint32 *v27;
+	tjs_uint32 *v28;
+	int v29;
+	int v30;
+	int v31;
+	int v32;
+	int v33;
+	int v34;
+	int v35;
+	int v36;
+	int v37;
+	tjs_uint32 *v38;
+	tjs_uint32 *v39;
+	int v40;
+	tjs_uint32 *dest_heighta;
+
+	v27 = slideopen_args.dest_buffer;
+	v39 = slideopen_args.src_buffer;
+	v3 = dest_height;
+	v24 = slideopen_args.buffer_aligned;
+	v4 = dest_height / 2;
+	v30 = dest_width / 2;
+	v34 = dest_height / 2;
+	v29 = dest_width / 2 - dest_height / 2 - a1;
+	v5 = a1 / -2;
+	v6 = (unsigned int)slideopen_args.dest_pitch >> 2;
+	v25 = (unsigned int)slideopen_args.dest_pitch >> 2;
+	v32 = a1 / -2 + a1;
+	result = a1 / 2;
+	v8 = a1 - a1 / 2;
+	if ( !slideopen_args.open )
+		return result;
+	v28 = &slideopen_args.buffer_aligned[v32 + v6 * v5];
+	dest_heighta = &slideopen_args.buffer_aligned[v32 + v6 * v5];
+	v9 = v25 * result;
+	v26 = &slideopen_args.buffer_aligned[v30 + v8 + v25 * result - v4];
+	if ( v5 >= 0 )
+	{
+		if ( v5 < v3 )
+			goto LABEL_7;
+		v5 -= v3;
+	}
+	else
+	{
+		v5 += v3;
+	}
+	v28 = &slideopen_args.buffer_aligned[v32 + v25 * v5];
+	dest_heighta = &slideopen_args.buffer_aligned[v32 + v25 * v5];
+LABEL_7:
+	if ( result >= 0 )
+	{
+		if ( result < v3 )
+			goto LABEL_12;
+		v8 -= v3;
+		result -= v3;
+	}
+	else
+	{
+		v8 += v3;
+		result += v3;
+	}
+	v9 = v25 * result;
+	v26 = &slideopen_args.buffer_aligned[v30 + v8 + v25 * result - v34];
+LABEL_12:
+	if ( v3 <= 0 )
+		return result;
+	v33 = v9;
+	v31 = v3 * v25;
+	v40 = v3;
+	do
+	{
+		v10 = v29;
+		v11 = 0;
+		if ( v29 > 0 )
+		{
+			v12 = v27;
+			v35 = v29;
+			v11 = v29;
+			do
+			{
+				++v12;
+				*(v12 - 1) = *(tjs_uint32 *)((tjs_uint8 *)dest_heighta + ((tjs_uint8 *)v12 - (tjs_uint8 *)v27) - 4);
+				--v35;
+			}
+			while ( v35 );
+			v10 = v29;
+		}
+		v13 = v10 + 2 * a1;
+		v14 = dest_width;
+		v36 = v13;
+		if ( v13 > dest_width )
+		{
+			v13 = dest_width;
+			v36 = dest_width;
+		}
+		if ( v11 < v13 )
+		{
+			v15 = &v27[v11];
+			v16 = (tjs_uint8 *)v39 - (tjs_uint8 *)v27;
+			v17 = v36 - v11;
+			v37 = v17;
+			v11 += v17;
+			v18 = v15;
+			while ( 1 )
+			{
+				*v18 = *(tjs_uint32 *)((tjs_uint8 *)v18 + v16);
+				++v18;
+				if ( !--v37 )
+					break;
+				v16 = (tjs_uint8 *)v39 - (tjs_uint8 *)v27;
+			}
+			v14 = dest_width;
+		}
+		if ( v11 < v14 )
+		{
+			v19 = &v27[v11];
+			v38 = v26;
+			v20 = dest_width - v11;
+			do
+			{
+				++v19;
+				*(v19 - 1) = *v38;
+				--v20;
+				++v38;
+			}
+			while ( v20 );
+		}
+		++v29;
+		v27 += v25;
+		++v5;
+		dest_heighta += v25;
+		++v8;
+		v28 += v25;
+		++result;
+		v26 += v25 + 1;
+		v21 = v25 + v33;
+		v33 += v25;
+		v39 += v25;
+		if ( v5 >= 0 )
+		{
+			if ( v5 < v3 )
+				goto LABEL_33;
+			v5 -= v3;
+			v22 = &v28[-v31];
+		}
+		else
+		{
+			v5 += v3;
+			v22 = &v28[v31];
+		}
+		v28 = v22;
+		dest_heighta = v22;
+LABEL_33:
+		if ( result < 0 )
+		{
+			v8 += v3;
+			result += v3;
+			v23 = v31 + v21;
+LABEL_37:
+			v33 = v23;
+			v26 = &v24[v30 + v8 + v23 - v34];
+			goto LABEL_38;
+		}
+		if ( result >= v3 )
+		{
+			v8 -= v3;
+			result -= v3;
+			v23 = v21 - v31;
+			goto LABEL_37;
+		}
+LABEL_38:
+		--v40;
+	}
+	while ( v40 );
+	return result;
+}
+#endif
 
 
 static tjs_error TJS_INTF_METHOD
