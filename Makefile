@@ -1,5 +1,5 @@
 
-SOURCES += drawer/main.cpp filter/main.cpp slideopen/main.cpp
+SOURCES += drawer/main.cpp filter/main.cpp
 
 INCFLAGS += -Icommon
 
