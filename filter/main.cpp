@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ncbind/ncbind.hpp"
-#include "layer_util.h"
+#include "LayerBitmapUtility.h"
 #include <cmath>
 #include <limits>
 
@@ -530,15 +530,19 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 	ncbPropAccessor dict(param[0]->AsObjectNoAddRef());
 	// src: layer
 	tTJSVariant src;
+	tTJSVariantClosure srcbmpobject_clo;
 	if (dict.checkVariant(TJS_W("src"), src))
 	{
-		get_layer_pointers(src, &src_buffer, &src_width, &src_height, &src_pitch);
+		srcbmpobject_clo = src.AsObjectClosureNoAddRef();
+		GetBitmapInformationFromObject(srcbmpobject_clo, false, &src_width, &src_height, &src_pitch, (tjs_uint8 **)&src_buffer);
 	}
 	// dest: layer
 	tTJSVariant dest;
+	tTJSVariantClosure bmpobject_clo;
 	if (dict.checkVariant(TJS_W("dest"), dest))
 	{
-		get_layer_pointers(dest, &dest_buffer, &dest_width, &dest_height, &dest_pitch);
+		bmpobject_clo = dest.AsObjectClosureNoAddRef();
+		GetBitmapInformationFromObject(bmpobject_clo, true, &dest_width, &dest_height, &dest_pitch, (tjs_uint8 **)&dest_buffer);
 	}
 	// tick: tTJSVariant::operator tjs_int() const; default 0
 	tjs_int tick = dict.getIntValue(TJS_W("tick"), 0);
@@ -704,7 +708,12 @@ doHaze(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch
 		}
 	}
 LABEL_99:
-	update_layer(dest, 0, v27, dest_width, v22);
+	tTVPRect UpdateRect;
+	UpdateRect.left = 0;
+	UpdateRect.top = v27;
+	UpdateRect.right = (tjs_int)dest_width;
+	UpdateRect.bottom = (tjs_int)v22;
+	UpdateLayerWithLayerObject(bmpobject_clo, &UpdateRect, NULL, NULL);
 	return TJS_S_OK;
 }
 
@@ -734,18 +743,20 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	// TODO: Stub 1000F37C 10004860; possible replacement by LayerExImage.light
 	if (numparams == 0) return TJS_E_BADPARAMCOUNT;
 	tjs_int dest_width, dest_height, dest_pitch;
-	tjs_uint32 *dest_buffer;
+	tjs_uint32 *dest_buffer = NULL;
 	//arg0 = dictionary
 	ncbPropAccessor dict(param[0]->AsObjectNoAddRef());
 	// layer: layer
 	tTJSVariant dest;
+	tTJSVariantClosure bmpobject_clo;
 	if (dict.checkVariant(TJS_W("layer"), dest))
 	{
-		get_layer_pointers(dest, &dest_buffer, &dest_width, &dest_height, &dest_pitch);
+		bmpobject_clo = dest.AsObjectClosureNoAddRef();
+		GetBitmapInformationFromObject(bmpobject_clo, true, &dest_width, &dest_height, &dest_pitch, (tjs_uint8 **)&dest_buffer);
 	}
 	// level: tTJSVariant::operator tjs_int() const
 	tjs_int level = dict.getIntValue(TJS_W("level"), 0);
-	if (level)
+	if (level && dest_buffer)
 	{
 		if ( level >= -127 )
 		{
@@ -802,8 +813,8 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 				dest_buffer[(i * v49) + j] = v20[dest_buffer[(i * v49) + j] & 0xFF] | (v20[(dest_buffer[(i * v49) + j] >> 8) & 0xFF] << 8) | (v20[(dest_buffer[(i * v49) + j] >> 16) & 0xFF] << 16) | dest_buffer[(i * v49) + j] & 0xFF000000;
 			}
 		}
+		UpdateWholeLayerWithLayerObject(bmpobject_clo);
 	}
-	update_layer(dest, 0, 0, dest_width, dest_height);
 	return TJS_S_OK;
 }
 
@@ -819,9 +830,11 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 	ncbPropAccessor dict(param[0]->AsObjectNoAddRef());
 	// layer: layer
 	tTJSVariant dest;
+	tTJSVariantClosure bmpobject_clo;
 	if (dict.checkVariant(TJS_W("layer"), dest))
 	{
-		get_layer_pointers(dest, &dest_buffer, &dest_width, &dest_height, &dest_pitch);
+		bmpobject_clo = dest.AsObjectClosureNoAddRef();
+		GetBitmapInformationFromObject(bmpobject_clo, true, &dest_width, &dest_height, &dest_pitch, (tjs_uint8 **)&dest_buffer);
 	}
 	// monocro: tTJSVariant::operator tjs_int() const; defualt 1
 	tjs_int monocro = dict.getIntValue(TJS_W("monocro"), 1);
@@ -1051,7 +1064,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 			}
 		}
 	}
-	update_layer(dest, 0, 0, dest_width, dest_height);
+	UpdateWholeLayerWithLayerObject(bmpobject_clo);
 	return TJS_S_OK;
 }
 

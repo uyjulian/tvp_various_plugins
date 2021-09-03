@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ncbind/ncbind.hpp"
-#include "layer_util.h"
+#include "LayerBitmapUtility.h"
 
 #if 0
 static tjs_error TJS_INTF_METHOD
@@ -292,7 +292,9 @@ drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 	tjs_int color = param[5]->AsInteger();
 
 	//get layer stuff
-	get_layer_pointers(layer, &dest_buffer, &dest_width, &dest_height, &dest_pitch);
+	tTJSVariant bmpobject = tTJSVariant(layer, layer);
+	tTJSVariantClosure bmpobject_clo = bmpobject.AsObjectClosureNoAddRef();
+	GetBitmapInformationFromObject(bmpobject_clo, true, &dest_width, &dest_height, &dest_pitch, (tjs_uint8 **)&dest_buffer);
 	//setting of global variables
 	sub_10001260(dest_buffer, dest_pitch, dest_width, dest_height);
 	//call sub_100012A0
@@ -301,7 +303,7 @@ drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 		sub_100014A0(x1, y1, x2, y2, color);
 	}
 	//update layer
-	update_layer(layer, 0, 0, dest_width, dest_height);
+	UpdateWholeLayerWithLayerObject(bmpobject_clo);
 	return TJS_S_OK;
 }
 
@@ -448,7 +450,9 @@ drawLine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 	tjs_int color = param[5]->AsInteger();
 
 	//get layer stuff
-	get_layer_pointers(layer, &dest_buffer, &dest_width, &dest_height, &dest_pitch);
+	tTJSVariant bmpobject = tTJSVariant(layer, layer);
+	tTJSVariantClosure bmpobject_clo = bmpobject.AsObjectClosureNoAddRef();
+	GetBitmapInformationFromObject(bmpobject_clo, true, &dest_width, &dest_height, &dest_pitch, (tjs_uint8 **)&dest_buffer);
 	//setting of global variables
 	sub_10001260(dest_buffer, dest_pitch, dest_width, dest_height);
 	//call sub_100012A0
@@ -457,7 +461,7 @@ drawLine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 		sub_100012A0(x1, y1, x2, y2, color);
 	}
 	//update layer
-	update_layer(layer, 0, 0, dest_width, dest_height);
+	UpdateWholeLayerWithLayerObject(bmpobject_clo);
 
 	return TJS_S_OK;
 }

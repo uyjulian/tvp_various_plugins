@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ncbind/ncbind.hpp"
-#include "layer_util.h"
 
 static struct
 {
@@ -1048,7 +1047,9 @@ drawSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 		default:
 			break;
 	}
+#if 0
 	update_layer(slideopen_args.dest_dispatch, 0, 0, slideopen_args.dest_width, slideopen_args.dest_height);
+#endif
 	return TJS_S_OK;
 }
 
@@ -1067,7 +1068,9 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	tTJSVariant dest;
 	if (dict.checkVariant(TJS_W("dest"), dest))
 	{
+#if 0
 		get_layer_pointers(dest, &slideopen_args.dest_buffer, &slideopen_args.dest_width, &slideopen_args.dest_height, &slideopen_args.dest_pitch);
+#endif
 		slideopen_args.dest_dispatch = dest.AsObject();
 	}
 	else
@@ -1078,7 +1081,9 @@ initSlideOpen(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSD
 	tTJSVariant src;
 	if (dict.checkVariant(TJS_W("src"), src))
 	{
+#if 0
 		get_layer_pointers(src, &slideopen_args.src_buffer, &slideopen_args.src_width, &slideopen_args.src_height, &slideopen_args.src_pitch);
+#endif
 	}
 	else
 	{

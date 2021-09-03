@@ -1,5 +1,5 @@
 
-SOURCES += drawer/main.cpp filter/main.cpp
+SOURCES += common/LayerBitmapUtility.cpp drawer/main.cpp filter/main.cpp
 
 INCFLAGS += -Icommon
 
