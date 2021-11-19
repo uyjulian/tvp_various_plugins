@@ -237,7 +237,7 @@ int sub_10001E00(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6
 	unsigned int v61;
 	unsigned int v62;
 	int v63;
-	layer_info_x *v64;
+	unsigned int v64;
 	int v65;
 	int v66;
 	int i;
@@ -345,7 +345,6 @@ int sub_10001E00(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6
 		}
 		if (v32 >= 0)
 		{
-			result = (int)layerinfo;
 			if (v32 <= layerinfo->clipHeight)
 			{
 				v40 = (v12 >> 16) + v41 * v32;
@@ -412,7 +411,7 @@ int sub_10001E00(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6
 			v25 = v57;
 		}
 		result = v22 - v20;
-		v64 = (layer_info_x *)result;
+		v64 = result;
 		if (result)
 		{
 			v51 = HIBYTE(v25);
@@ -429,14 +428,13 @@ int sub_10001E00(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6
 				v48 += v55;
 				v19 = v48;
 				v18 = v42;
-				result = (int)&v64[-1].clipHeight + 3;
-				v64 = (layer_info_x *)result;
+				result = v64 - 1;
+				v64 = result;
 			} while (result);
 			v25 = v57;
 		}
 		if (v18 >= 0)
 		{
-			result = (int)layerinfo;
 			if (v18 <= layerinfo->clipWidth)
 			{
 				v29 = v18 + v41 * (v19 >> 16);
