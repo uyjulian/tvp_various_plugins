@@ -3,6 +3,6 @@ SOURCES += common/LayerBitmapUtility.cpp drawer/main.cpp filter/main.cpp layerEx
 
 INCFLAGS += -Icommon
 
-PROJECT_BASENAME = kr_various_plugins
+PROJECT_BASENAME = krkr_various_plugins
 
 include external/ncbind/Rules.lib.make
