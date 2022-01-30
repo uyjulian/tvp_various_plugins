@@ -390,7 +390,7 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		v23 = v15 & 0x80000001;
 		v22 = v23 == 0;
 		if ( v23 < 0 )
-			v22 = (((tjs_uint8)v23 - 1) | 0xFFFFFFFE) == -1;
+			v22 = (((tjs_uint8)v23 - 1) | 0xFFFFFFFE) == 0xFFFFFFFF;
 		if ( !v22 )
 			goto LABEL_24;
 	}

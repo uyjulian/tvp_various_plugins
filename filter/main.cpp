@@ -810,7 +810,7 @@ Contrast(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispat
 		{
 			for (tjs_int j = 0; j < dest_width; j += 1)
 			{
-				dest_buffer[(i * v49) + j] = v20[dest_buffer[(i * v49) + j] & 0xFF] | (v20[(dest_buffer[(i * v49) + j] >> 8) & 0xFF] << 8) | (v20[(dest_buffer[(i * v49) + j] >> 16) & 0xFF] << 16) | dest_buffer[(i * v49) + j] & 0xFF000000;
+				dest_buffer[(i * v49) + j] = v20[dest_buffer[(i * v49) + j] & 0xFF] | (v20[(dest_buffer[(i * v49) + j] >> 8) & 0xFF] << 8) | (v20[(dest_buffer[(i * v49) + j] >> 16) & 0xFF] << 16) | (dest_buffer[(i * v49) + j] & 0xFF000000);
 			}
 		}
 		UpdateWholeLayerWithLayerObject(bmpobject_clo);
@@ -908,13 +908,13 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 					{
 						v30 = 1566083941ll * (tjs_uint32)v29;
 						v29 = v30 + 1;
-						(*((tjs_uint32*)&(v30)+1)) = ((v29 & 0xFF000000) >> 24) | ((v29 & 0xFF000000) >> 16) | ((v29 & 0xFF000000) >> 8) | (*((tjs_uint32*)&(v30)+1)) & 0xFF000000;
+						(*((tjs_uint32*)&(v30)+1)) = ((v29 & 0xFF000000) >> 24) | ((v29 & 0xFF000000) >> 16) | ((v29 & 0xFF000000) >> 8) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
 						v27[0] = (*((tjs_uint32*)&(v30)+1));
 						v31 = v27 + 1;
-						(*((tjs_uint32*)&(v30)+1)) = ((v29 & 0xFF0000u) >> 16) | ((v29 & 0xFF0000u) >> 8) | v29 & 0xFF0000 | (*((tjs_uint32*)&(v30)+1)) & 0xFF000000;
+						(*((tjs_uint32*)&(v30)+1)) = ((v29 & 0xFF0000u) >> 16) | ((v29 & 0xFF0000u) >> 8) | (v29 & 0xFF0000) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
 						v31[0] = (*((tjs_uint32*)&(v30)+1));
 						++v31;
-						v31[0] = ((v29 & 0xFF00u) << 8 >> 16) | ((v29 & 0xFF00) << 8) | v29 & 0xFF00 | (*((tjs_uint32*)&(v30)+1)) & 0xFF000000;
+						v31[0] = ((v29 & 0xFF00u) << 8 >> 16) | ((v29 & 0xFF00) << 8) | (v29 & 0xFF00) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
 						v27 = v31 + 1;
 					}
 					v24 = v74;
@@ -926,11 +926,11 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 						(*((tjs_uint8*)&(v33))) = 0;
 						(*((tjs_uint8*)&(v33)+1)) = (*((tjs_uint8*)&(v87)+2));
 						v24 = v32 & 0xFFFF0000;
-						v26[0] = v32 & 0xFFFF0000 | ((v32 & 0xFF0000 | v33) >> 8) | 0xFF000000;
+						v26[0] = (v32 & 0xFFFF0000) | (((v32 & 0xFF0000) | v33) >> 8) | 0xFF000000;
 						v90 = v26 + 1;
 					}
 					if ( v28 > 0 )
-						v90[0] = (tjs_uint16)(v32 & 0xFF00) | (*((tjs_uint8*)&(v32)+1)) | ((v32 & 0xFF00 | 0xFFFF0000) << 8);
+						v90[0] = (tjs_uint16)(v32 & 0xFF00) | (*((tjs_uint8*)&(v32)+1)) | (((v32 & 0xFF00) | 0xFFFF0000) << 8);
 					v26 = (tjs_uint32 *)((tjs_uint8 *)v26 + (tjs_uint32)dest_pitch);
 				}
 			}
@@ -1040,9 +1040,9 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 						v59 = 1566083941 * v57 + 1;
 						noise_current_seed = 1566083941 * v59 + 1;
 						v60 = v87;
-						v87[0] = (tjs_uint8)(under + (v24 * (tjs_uint16)v59 >> 16)) | ((under + ((tjs_int32)(v24 * (tjs_uint16)v58) >> 16)) << 16) & 0xFFFF0000 | (((tjs_uint16)under + (v24 * ((v58 >> 16) & 0xFFFF) >> 16)) << 8) & 0xFF00 | 0xFF000000;
+						v87[0] = (tjs_uint8)(under + (v24 * (tjs_uint16)v59 >> 16)) | (((under + ((tjs_int32)(v24 * (tjs_uint16)v58) >> 16)) << 16) & 0xFFFF0000) | ((((tjs_uint16)under + (v24 * ((v58 >> 16) & 0xFFFF) >> 16)) << 8) & 0xFF00) | 0xFF000000;
 						++v60;
-						v60[0] = (((tjs_uint16)under + (v24 * (tjs_uint16)v59 >> 16)) << 8) & 0xFF00 | (tjs_uint8)(under + (v24 * ((v59 >> 16) & 0xFFFF) >> 16)) | ((under + ((tjs_int32)(v24 * ((v59 >> 16) & 0xFFFF)) >> 16)) << 16) & 0xFFFF0000 | 0xFF000000;
+						v60[0] = ((((tjs_uint16)under + (v24 * (tjs_uint16)v59 >> 16)) << 8) & 0xFF00) | (tjs_uint8)(under + (v24 * ((v59 >> 16) & 0xFFFF) >> 16)) | (((under + ((tjs_int32)(v24 * ((v59 >> 16) & 0xFFFF)) >> 16)) << 16) & 0xFFFF0000) | 0xFF000000;
 						v55 = v60 + 1;
 						v87 = v55;
 						seed = noise_current_seed;
@@ -1054,7 +1054,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 				{
 					v62 = 1566083941 * seed + 1;
 					noise_current_seed = 1566083941 * v62 + 1;
-					v63 = (tjs_uint8)(under + (v24 * (tjs_uint16)noise_current_seed >> 16)) | ((under + ((tjs_int32)(v24 * (tjs_uint16)v62) >> 16)) << 16) & 0xFFFF0000 | (((tjs_uint16)under + (v24 * ((v62 >> 16) & 0xFFFF) >> 16)) << 8) & 0xFF00;
+					v63 = (tjs_uint8)(under + (v24 * (tjs_uint16)noise_current_seed >> 16)) | (((under + ((tjs_int32)(v24 * (tjs_uint16)v62) >> 16)) << 16) & 0xFFFF0000) | ((((tjs_uint16)under + (v24 * ((v62 >> 16) & 0xFFFF) >> 16)) << 8) & 0xFF00);
 					v55[0] = v63 | 0xFF000000;
 					++v55;
 					seed = noise_current_seed;
