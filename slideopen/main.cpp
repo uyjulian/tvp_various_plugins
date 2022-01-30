@@ -560,9 +560,9 @@ LABEL_12:
 			v12 = v30;
 			do
 			{
-				++v13;
+				v13 += 1;
 				*(v13 - 1) = *(tjs_uint32 *)((tjs_uint8 *)v27 + ((tjs_uint8 *)v13 - (tjs_uint8 *)v26) - 4);
-				--v36;
+				v36 -= 1;
 			}
 			while ( v36 );
 			v11 = v30;
@@ -580,8 +580,9 @@ LABEL_12:
 			while ( 1 )
 			{
 				*v18 = *(tjs_uint32 *)((tjs_uint8 *)v18 + v16);
-				++v18;
-				if ( !--v17 )
+				v18 += 1;
+				v17 -= 1;
+				if ( !v17 )
 					break;
 				v16 = (tjs_uint8 *)v35 - (tjs_uint8 *)v26;
 			}
@@ -595,20 +596,20 @@ LABEL_12:
 			v20 = dest_width - v12;
 			do
 			{
-				++v19;
+				v19 += 1;
 				*(v19 - 1) = *dest_heightb;
-				--v20;
-				++dest_heightb;
+				v20 -= 1;
+				dest_heightb += 1;
 			}
 			while ( v20 );
 		}
-		--v30;
+		v30 -= 1;
 		v26 += v24;
-		++v6;
+		v6 += 1;
 		v27 += v24;
-		--v10;
+		v10 -= 1;
 		v29 += v24;
-		++result;
+		result += 1;
 		dest_heighta = v10;
 		v28 = &v28[v24 - 1];
 		v21 = v24 + v33;
@@ -649,7 +650,7 @@ LABEL_37:
 			goto LABEL_37;
 		}
 LABEL_38:
-		--v37;
+		v37 -= 1;
 	}
 	while ( v37 );
 	return result;
@@ -902,9 +903,9 @@ LABEL_12:
 			v11 = v29;
 			do
 			{
-				++v12;
+				v12 += 1;
 				*(v12 - 1) = *(tjs_uint32 *)((tjs_uint8 *)dest_heighta + ((tjs_uint8 *)v12 - (tjs_uint8 *)v27) - 4);
-				--v35;
+				v35 -= 1;
 			}
 			while ( v35 );
 			v10 = v29;
@@ -928,8 +929,9 @@ LABEL_12:
 			while ( 1 )
 			{
 				*v18 = *(tjs_uint32 *)((tjs_uint8 *)v18 + v16);
-				++v18;
-				if ( !--v37 )
+				v18 += 1;
+				v37 -= 1;
+				if ( !v37 )
 					break;
 				v16 = (tjs_uint8 *)v39 - (tjs_uint8 *)v27;
 			}
@@ -942,20 +944,20 @@ LABEL_12:
 			v20 = dest_width - v11;
 			do
 			{
-				++v19;
+				v19 += 1;
 				*(v19 - 1) = *v38;
-				--v20;
-				++v38;
+				v20 -= 1;
+				v38 += 1;
 			}
 			while ( v20 );
 		}
-		++v29;
+		v29 += 1;
 		v27 += v25;
-		++v5;
+		v5 += 1;
 		dest_heighta += v25;
-		++v8;
+		v8 += 1;
 		v28 += v25;
-		++result;
+		result += 1;
 		v26 += v25 + 1;
 		v21 = v25 + v33;
 		v33 += v25;
@@ -993,7 +995,7 @@ LABEL_37:
 			goto LABEL_37;
 		}
 LABEL_38:
-		--v40;
+		v40 -= 1;
 	}
 	while ( v40 );
 	return result;

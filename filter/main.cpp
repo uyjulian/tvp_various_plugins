@@ -253,9 +253,10 @@ static void sub_100027C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_in
 			*v10 = ((*v11 >> 2) & 0x3F3F3F3F)
 					 + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F)
 					 + ((*(v11 - 1) >> 2) & 0x3F3F3F3F);
-			++v10;
-			++v11;
-			if ( !--v12 )
+			v10 += 1;
+			v11 += 1;
+			v12 -= 1;
+			if ( !v12 )
 				break;
 		}
 		*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
@@ -265,9 +266,10 @@ static void sub_100027C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_in
 		while ( 1 )
 		{
 			*v8 = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
-			++v8;
-			++v9;
-			if ( !--v7 )
+			v8 += 1;
+			v9 += 1;
+			v7 -= 1;
+			if ( !v7 )
 				break;
 		}
 	}
@@ -291,28 +293,29 @@ static void sub_100027C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_in
 					*v10 = ((*v11 >> 2) & 0x3F3F3F3F)
 							 + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F)
 							 + ((*(v11 - 1) >> 2) & 0x3F3F3F3F);
-					++v10;
-					++v11;
+					v10 += 1;
+					v11 += 1;
 LABEL_9:
 					*v10 = ((*v11 >> 2) & 0x3F3F3F3F)
 							 + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F)
 							 + ((*(v11 - 1) >> 2) & 0x3F3F3F3F);
-					++v10;
-					++v11;
+					v10 += 1;
+					v11 += 1;
 LABEL_6:
 					*v10 = ((*v11 >> 2) & 0x3F3F3F3F)
 							 + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F)
 							 + ((*(v11 - 1) >> 2) & 0x3F3F3F3F);
-					++v10;
-					++v11;
-					if ( !--v12 )
+					v10 += 1;
+					v11 += 1;
+					v12 -= 1;
+					if ( !v12 )
 						break;
 LABEL_7:
 					*v10 = ((*v11 >> 2) & 0x3F3F3F3F)
 							 + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F)
 							 + ((*(v11 - 1) >> 2) & 0x3F3F3F3F);
-					++v10;
-					++v11;
+					v10 += 1;
+					v11 += 1;
 				}
 				break;
 			default:
@@ -334,22 +337,23 @@ LABEL_7:
 				while ( 1 )
 				{
 					*v8 = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
-					++v8;
-					++v9;
+					v8 += 1;
+					v9 += 1;
 LABEL_16:
 					*v8 = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
-					++v8;
-					++v9;
+					v8 += 1;
+					v9 += 1;
 LABEL_13:
 					*v8 = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
-					++v8;
-					++v9;
-					if ( !--v7 )
+					v8 += 1;
+					v9 += 1;
+					v7 -= 1;
+					if ( !v7 )
 						break;
 LABEL_14:
 					*v8 = ((*v9 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v8 >> 1) & 0x7F7F7F7F);
-					++v8;
-					++v9;
+					v8 += 1;
+					v9 += 1;
 				}
 				break;
 			default:
@@ -421,9 +425,10 @@ static void sub_100029C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_in
 		while ( 1 )
 		{
 			*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + ((*(v11 - 1) >> 1) & 0x7F7F7F7F);
-			++v10;
-			++v11;
-			if ( !--v12 )
+			v10 += 1;
+			v11 += 1;
+			v12 -= 1;
+			if ( !v12 )
 				break;
 		}
 		*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + (((tjs_uint32)*v10 >> 1) & 0x7F7F7F7F);
@@ -433,9 +438,10 @@ static void sub_100029C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_in
 		while ( 1 )
 		{
 			*v8 = *v9;
-			++v8;
-			++v9;
-			if ( !--v7 )
+			v8 += 1;
+			v9 += 1;
+			v7 -= 1;
+			if ( !v7 )
 				break;
 		}
 	}
@@ -457,22 +463,23 @@ static void sub_100029C0(tjs_uint32 *dest_buffer, tjs_uint32 *src_buffer, tjs_in
 				while ( 1 )
 				{
 					*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + ((*(v11 - 1) >> 1) & 0x7F7F7F7F);
-					++v10;
-					++v11;
+					v10 += 1;
+					v11 += 1;
 LABEL_9:
 					*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + ((*(v11 - 1) >> 1) & 0x7F7F7F7F);
-					++v10;
-					++v11;
+					v10 += 1;
+					v11 += 1;
 LABEL_6:
 					*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + ((*(v11 - 1) >> 1) & 0x7F7F7F7F);
-					++v10;
-					++v11;
-					if ( !--v12 )
+					v10 += 1;
+					v11 += 1;
+					v12 -= 1;
+					if ( !v12 )
 						break;
 LABEL_7:
 					*v10 = ((*v11 >> 1) & 0x7F7F7F7F) + ((*(v11 - 1) >> 1) & 0x7F7F7F7F);
-					++v10;
-					++v11;
+					v10 += 1;
+					v11 += 1;
 				}
 				break;
 			default:
@@ -494,22 +501,23 @@ LABEL_7:
 				while ( 1 )
 				{
 					*v8 = *v9;
-					++v8;
-					++v9;
+					v8 += 1;
+					v9 += 1;
 LABEL_16:
 					*v8 = *v9;
-					++v8;
-					++v9;
+					v8 += 1;
+					v9 += 1;
 LABEL_13:
 					*v8 = *v9;
-					++v8;
-					++v9;
-					if ( !--v7 )
+					v8 += 1;
+					v9 += 1;
+					v7 -= 1;
+					if ( !v7 )
 						break;
 LABEL_14:
 					*v8 = *v9;
-					++v8;
-					++v9;
+					v8 += 1;
+					v9 += 1;
 				}
 				break;
 			default:
@@ -913,7 +921,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 						v31 = v27 + 1;
 						(*((tjs_uint32*)&(v30)+1)) = ((v29 & 0xFF0000u) >> 16) | ((v29 & 0xFF0000u) >> 8) | (v29 & 0xFF0000) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
 						v31[0] = (*((tjs_uint32*)&(v30)+1));
-						++v31;
+						v31 += 1;
 						v31[0] = ((v29 & 0xFF00u) << 8 >> 16) | ((v29 & 0xFF00) << 8) | (v29 & 0xFF00) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
 						v27 = v31 + 1;
 					}
@@ -964,7 +972,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 						noise_current_seed = v43;
 						v44 = (tjs_uint8)(under + (v24 * (v43 >> 16) >> 16));
 						v35[0] = v44 | ((v44 | ((v44 | 0xFFFFFF00) << 8)) << 8);
-						++v35;
+						v35 += 1;
 						seed = noise_current_seed;
 					}
 					seed = noise_current_seed;
@@ -987,10 +995,10 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 					v49 = v45 + 1;
 					v50 = 1566083941 * v48 + 1;
 					v49[0] = (v50 >> 8) | 0xFF000000;
-					++v49;
+					v49 += 1;
 					v51 = 1566083941 * v50 + 1;
 					v49[0] = (v51 >> 8) | 0xFF000000;
-					++v49;
+					v49 += 1;
 					v47 = 1566083941 * v51 + 1;
 					v49[0] = (v47 >> 8) | 0xFF000000;
 					v45 = v49 + 1;
@@ -1013,7 +1021,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 				{
 					noise_current_seed = 1566083941 * noise_current_seed + 1;
 					v53[0] = ((tjs_uint32)noise_current_seed >> 8) | 0xFF000000;
-					++v53;
+					v53 += 1;
 					v90 = v53;
 				}
 				if ( v52 > 0 )
@@ -1041,7 +1049,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 						noise_current_seed = 1566083941 * v59 + 1;
 						v60 = v87;
 						v87[0] = (tjs_uint8)(under + (v24 * (tjs_uint16)v59 >> 16)) | (((under + ((tjs_int32)(v24 * (tjs_uint16)v58) >> 16)) << 16) & 0xFFFF0000) | ((((tjs_uint16)under + (v24 * ((v58 >> 16) & 0xFFFF) >> 16)) << 8) & 0xFF00) | 0xFF000000;
-						++v60;
+						v60 += 1;
 						v60[0] = ((((tjs_uint16)under + (v24 * (tjs_uint16)v59 >> 16)) << 8) & 0xFF00) | (tjs_uint8)(under + (v24 * ((v59 >> 16) & 0xFFFF) >> 16)) | (((under + ((tjs_int32)(v24 * ((v59 >> 16) & 0xFFFF)) >> 16)) << 16) & 0xFFFF0000) | 0xFF000000;
 						v55 = v60 + 1;
 						v87 = v55;
@@ -1056,7 +1064,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 					noise_current_seed = 1566083941 * v62 + 1;
 					v63 = (tjs_uint8)(under + (v24 * (tjs_uint16)noise_current_seed >> 16)) | (((under + ((tjs_int32)(v24 * (tjs_uint16)v62) >> 16)) << 16) & 0xFFFF0000) | ((((tjs_uint16)under + (v24 * ((v62 >> 16) & 0xFFFF) >> 16)) << 8) & 0xFF00);
 					v55[0] = v63 | 0xFF000000;
-					++v55;
+					v55 += 1;
 					seed = noise_current_seed;
 				}
 				seed = noise_current_seed;

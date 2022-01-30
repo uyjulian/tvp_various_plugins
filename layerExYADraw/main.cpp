@@ -138,7 +138,8 @@ void sub_10001B80(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a
 					0xFFFF - (tjs_uint16)v13);
 			v13 += v33;
 			v30 += v36 * v23;
-			if (!--v27)
+			v27 -= 1;
+			if (!v27)
 				break;
 			v25 = v30;
 		}
@@ -168,7 +169,7 @@ void sub_10001B80(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a
 					0xFFFF - (tjs_uint16)v17);
 			v29 += v32;
 			v17 += v34;
-			--v26;
+			v26 -= 1;
 		} while (v26);
 		v19 = v29 + v36 * (v17 >> 16);
 		mainImageBufferForWrite[v19] = calc_pixel(a6, mainImageBufferForWrite[v19], (tjs_uint16)v17);
@@ -300,7 +301,8 @@ int sub_10001E00(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6
 						0xFFFF - (tjs_uint16)v12);
 				v12 += v60;
 				v46 += v41 * v43;
-				if (!--v65)
+				v65 -= 1;
+				if (!v65)
 					break;
 				v34 = v46;
 				v33 = v54;
@@ -398,7 +400,8 @@ int sub_10001E00(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6
 				v42 += v53;
 				v19 += v55;
 				v18 = v42;
-				if (!--v63)
+				v63 -= 1;
+				if (!v63)
 					break;
 				v21 = v59;
 			}
@@ -611,7 +614,8 @@ void sub_10001450(
 				else
 					sub_10001E00(v35X, v33X, v34X, layerinfo, v36X, color, v15);
 			}
-			if (!--v38)
+			v38 -= 1;
+			if (!v38)
 				break;
 		}
 	}

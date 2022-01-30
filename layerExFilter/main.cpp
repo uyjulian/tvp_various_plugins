@@ -60,7 +60,7 @@ static haze_slot *haze_slots[10];
 
 static tjs_uint32 find_next_free_haze_slot()
 {
-	for (tjs_uint32 i = 0; i < sizeof(haze_slots) / sizeof(haze_slots[0]); ++i)
+	for (tjs_uint32 i = 0; i < sizeof(haze_slots) / sizeof(haze_slots[0]); i += 1)
 	{
 		if (!haze_slots[i])
 			return i;
@@ -97,7 +97,7 @@ static bool free_haze_slot(tjs_uint32 a1)
 	if (a1 < 0 || a1 >= (sizeof(haze_slots) / sizeof(haze_slots[0])) || !haze_slots[a1])
 		return false;
 	haze_slot *v3 = haze_slots[a1];
-	for (tjs_int i = 0; i < 2; ++i)
+	for (tjs_int i = 0; i < 2; i += 1)
 	{
 		if (v3->arr12[i])
 			free(v3->arr12[i]);
@@ -166,18 +166,19 @@ static void fn_yes_alphablend(
 			while (1)
 			{
 				*a1a++ = ((v8 * ((src_mainImageBuffer[1] & 0xFF00FF00) >> 8) + a5b * ((*src_mainImageBuffer & 0xFF00FF00) >> 8)) & 0xFF00FF00) | (((v8 * (src_mainImageBuffer[1] & 0xFF00FF) + a5b * (*src_mainImageBuffer & 0xFF00FFu)) >> 8) & 0xFF00FF);
-				++src_mainImageBuffer;
+				src_mainImageBuffer += 1;
 			LABEL_12:
 				*a1a++ = ((v8 * ((src_mainImageBuffer[1] & 0xFF00FF00) >> 8) + a5b * ((*src_mainImageBuffer & 0xFF00FF00) >> 8)) & 0xFF00FF00) | (((v8 * (src_mainImageBuffer[1] & 0xFF00FF) + a5b * (*src_mainImageBuffer & 0xFF00FFu)) >> 8) & 0xFF00FF);
-				++src_mainImageBuffer;
+				src_mainImageBuffer += 1;
 			LABEL_13:
 				*a1a++ = ((v8 * ((src_mainImageBuffer[1] & 0xFF00FF00) >> 8) + a5b * ((*src_mainImageBuffer & 0xFF00FF00) >> 8)) & 0xFF00FF00) | (((v8 * (src_mainImageBuffer[1] & 0xFF00FF) + a5b * (*src_mainImageBuffer & 0xFF00FFu)) >> 8) & 0xFF00FF);
-				++src_mainImageBuffer;
-				if (!--v9)
+				src_mainImageBuffer += 1;
+				v9 -= 1;
+				if (!v9)
 					break;
 			LABEL_10:
 				*a1a++ = ((v8 * ((src_mainImageBuffer[1] & 0xFF00FF00) >> 8) + a5b * ((*src_mainImageBuffer & 0xFF00FF00) >> 8)) & 0xFF00FF00) | (((v8 * (src_mainImageBuffer[1] & 0xFF00FF) + a5b * (*src_mainImageBuffer & 0xFF00FFu)) >> 8) & 0xFF00FF);
-				++src_mainImageBuffer;
+				src_mainImageBuffer += 1;
 			}
 			break;
 		default:
@@ -242,7 +243,8 @@ static void fn_no_alphablend(
 				*a1a++ = *src_mainImageBuffer++;
 			LABEL_13:
 				*a1a++ = *src_mainImageBuffer++;
-				if (!--v8)
+				v8 -= 1;
+				if (!v8)
 					break;
 			LABEL_10:
 				*a1a++ = *src_mainImageBuffer++;
@@ -276,7 +278,7 @@ public:
 			*result = (tTVInteger)(tjs_int)haze_slot_index;
 		}
 		tTJSVariant tmpvariant;
-		for (tjs_int i = 1; i <= 2; ++i)
+		for (tjs_int i = 1; i <= 2; i += 1)
 		{
 			if (i != 2 || (numparams <= 2 ? (v13 = 0) : (v13 = (param[i]->Type() != tvtVoid)), v13 && (param[i]->Type() != tvtVoid)))
 			{
@@ -298,7 +300,7 @@ public:
 					count_1 = tmpvariant;
 					if (count_1 > 32)
 						count_1 = 32;
-					for (tjs_int j = 0; j < count_1; ++j)
+					for (tjs_int j = 0; j < count_1; j += 1)
 					{
 						v27.PropGetByNum(0, j, &tmpvariant, NULL);
 						if (tmpvariant.Type() != tvtVoid)
@@ -308,7 +310,7 @@ public:
 							tjs_int count_2 = tmpvariant;
 							if (count_2 > 3)
 								count_2 = 3;
-							for (tjs_int k = 0; k < count_2; ++k)
+							for (tjs_int k = 0; k < count_2; k += 1)
 							{
 								v24.PropGetByNum(0, k, &tmpvariant, NULL);
 								v28[j][k] = tmpvariant;
@@ -317,10 +319,10 @@ public:
 					}
 				}
 				double v30 = 0.0;
-				for (tjs_int m = 0; m < 0x4000; ++m)
+				for (tjs_int m = 0; m < 0x4000; m += 1)
 				{
 					double v21 = 0.0;
-					for (tjs_int n = 0; n < count_1; ++n)
+					for (tjs_int n = 0; n < count_1; n += 1)
 					{
 						v21 = cos(v30 * v28[n][0] + v28[n][1]) * v28[n][2] + v21;
 						v30 += 0.001533980787885641;
@@ -345,7 +347,7 @@ public:
 			{
 				tjs_int *v15 = (tjs_int *)malloc(8 * arr_count);
 				haze_slot_struct->arr3 = v15;
-				for (tjs_uint32 ii = 0; ii < arr_count; ++ii)
+				for (tjs_uint32 ii = 0; ii < arr_count; ii += 1)
 				{
 					v19.PropGetByNum(0, ii, &tmpvariant, NULL);
 					tTJSVariantClosure v16 = tmpvariant.AsObjectClosureNoAddRef();
@@ -509,7 +511,7 @@ public:
 				v118 += v80 * v92;
 				v110 += v80 * v105;
 				tjs_int v81;
-				for (tjs_uint32 i = 1; i < arr_count; ++i)
+				for (tjs_uint32 i = 1; i < arr_count; i += 1)
 				{
 					v81 = arr3[2 * i];
 					tjs_int v79 = ((arr3[2 * i + 1] - arr3[2 * i - 1]) << 8) / (v81 - v80);
@@ -552,7 +554,7 @@ public:
 							v70 = v71;
 						}
 						alphablend(v118, dl, &v110[v69], sl, v70, dw, src_imageWidth);
-						for (tjs_int j = v72 + 1; j < v81 - 1; ++j)
+						for (tjs_int j = v72 + 1; j < v81 - 1; j += 1)
 						{
 							tjs_int v73 = (v82 * per) >> 8;
 							v70 = (v73 * v122[rad & 0x3FFF]) >> 16;
@@ -636,7 +638,7 @@ public:
 							v75 = v76;
 						}
 						alphablend(v118, dl, v110, sl, v75, dw, src_imageWidth);
-						for (tjs_int k = v80 + 1; k < v81 - 1; ++k)
+						for (tjs_int k = v80 + 1; k < v81 - 1; k += 1)
 						{
 							alphablend(v118, dl, v110, sl, (((v82 * per) >> 8) * v94[rad & 0x3FFF]) >> 16, dw, src_imageWidth);
 							rad += delta;
@@ -710,7 +712,7 @@ public:
 					rad += delta;
 					v118 += v92;
 					v110 += v105;
-					for (tjs_int m = 1; m < dh - 1; ++m)
+					for (tjs_int m = 1; m < dh - 1; m += 1)
 					{
 						v85 = (per * v122[rad & 0x3FFF]) >> 16;
 						if (m - v85 >= 0)
@@ -799,7 +801,7 @@ public:
 					rad += delta;
 					v118 += v92;
 					v110 += v105;
-					for (tjs_int n = 1; n < dh - 1; ++n)
+					for (tjs_int n = 1; n < dh - 1; n += 1)
 					{
 						alphablend(v118, dl, v110, sl, (per * v94[rad & 0x3FFF]) >> 8, dw, src_imageWidth);
 						rad += delta;
@@ -910,7 +912,7 @@ public:
 			{
 				if (upper_under_diff == 255)
 				{
-					for (tjs_int i = h; i; --i)
+					for (tjs_int i = h; i; i -= 1)
 					{
 						tjs_uint32 *v32 = &write_buffer_offset[l];
 						tjs_int j;
@@ -945,7 +947,7 @@ public:
 				}
 				else
 				{
-					for (tjs_int k = h; k; --k)
+					for (tjs_int k = h; k; k -= 1)
 					{
 						tjs_uint32 *v29 = &write_buffer_offset[l];
 						tjs_int m;
@@ -970,7 +972,7 @@ public:
 							tjs_int v36 = cur_seed;
 #endif
 							*v29++ = (((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)cur_seed) >> 16)) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(v34)) >> 16)) << 8) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)v34) >> 16)) << 16)) & 0xFFFFFF) | 0xFF000000;
-							--m;
+							m -= 1;
 						}
 						write_buffer_offset += mainImageBufferPitch / sizeof(tjs_uint32);
 					}
@@ -979,7 +981,7 @@ public:
 			}
 			if (upper_under_diff != 255)
 			{
-				for (tjs_int n = h; n; --n)
+				for (tjs_int n = h; n; n -= 1)
 				{
 					tjs_uint32 *v38 = &write_buffer_offset[l];
 					tjs_int ii;
@@ -996,13 +998,13 @@ public:
 						cur_seed = 0x7D2B89DD * cur_seed + 1;
 						tjs_int v42 = (tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(cur_seed)) >> 16));
 						*v38++ = ((v42 | (v42 << 8) | (v42 << 16)) & 0xFFFFFF) | 0xFF000000;
-						--ii;
+						ii -= 1;
 					}
 					write_buffer_offset += mainImageBufferPitch / sizeof(tjs_uint32);
 				}
 				goto LABEL_159;
 			}
-			for (tjs_int jj = h;; --jj)
+			for (tjs_int jj = h;; jj -= 1)
 			{
 				if (!jj)
 					goto LABEL_159;
@@ -1033,7 +1035,7 @@ public:
 		{
 			if (upper_under_diff == 255)
 			{
-				for (tjs_int mm = h;; --mm)
+				for (tjs_int mm = h;; mm -= 1)
 				{
 					if (!mm)
 						goto LABEL_159;
@@ -1044,11 +1046,11 @@ public:
 						cur_seed = 0x7D2B89DD * cur_seed + 1;
 						tjs_int v60 = cur_seed;
 						*v57 = HIBYTE(cur_seed) | ((cur_seed >> 16) & 0xFF00) | ((cur_seed >> 8) & 0xFF0000) | (*v57 & 0xFF000000);
-						++v57;
+						v57 += 1;
 						*v57 = BYTE2(v60) | ((v60 >> 8) & 0xFF00) | (v60 & 0xFF0000) | (*v57 & 0xFF000000);
-						++v57;
+						v57 += 1;
 						*v57 = BYTE1(v60) | (v60 & 0xFF00) | ((v60 << 8) & 0xFF0000) | (*v57 & 0xFF000000);
-						++v57;
+						v57 += 1;
 					}
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					tjs_int v60 = cur_seed;
@@ -1057,15 +1059,15 @@ public:
 						if (nn != 2)
 							goto LABEL_81;
 						*v57 = HIBYTE(v60) | ((v60 >> 16) & 0xFF00) | ((v60 >> 8) & 0xFF0000) | (*v57 & 0xFF000000);
-						++v57;
+						v57 += 1;
 					}
 					*v57 = BYTE2(v60) | ((v60 >> 8) & 0xFF00) | (v60 & 0xFF0000) | (*v57 & 0xFF000000);
-					++v57;
+					v57 += 1;
 				LABEL_81:
 					write_buffer_offset += mainImageBufferPitch / sizeof(tjs_uint32);
 				}
 			}
-			for (tjs_int i1 = h; i1; --i1)
+			for (tjs_int i1 = h; i1; i1 -= 1)
 			{
 				tjs_uint32 *v55 = &write_buffer_offset[l];
 				tjs_int i2;
@@ -1074,25 +1076,25 @@ public:
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					tjs_int v60 = cur_seed;
 					*v55 = (((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)cur_seed) >> 16)) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)cur_seed) >> 16)) << 8) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)cur_seed) >> 16)) << 16)) & 0xFFFFFF) | (*v55 & 0xFF000000);
-					++v55;
+					v55 += 1;
 					tjs_int v59 = (tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(v60)) >> 16));
 					*v55 = ((v59 | (v59 << 8) | (v59 << 16)) & 0xFFFFFF) | (*v55 & 0xFF000000);
-					++v55;
+					v55 += 1;
 				}
 				while (i2)
 				{
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					tjs_int v59 = (tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(cur_seed)) >> 16));
 					*v55 = ((v59 | (v59 << 8) | (v59 << 16)) & 0xFFFFFF) | (*v55 & 0xFF000000);
-					++v55;
-					--i2;
+					v55 += 1;
+					i2 -= 1;
 				}
 				write_buffer_offset += mainImageBufferPitch / sizeof(tjs_uint32);
 			}
 		}
 		else if (upper_under_diff == 255)
 		{
-			for (tjs_int i3 = h; i3; --i3)
+			for (tjs_int i3 = h; i3; i3 -= 1)
 			{
 				tjs_uint32 *v49 = &write_buffer_offset[l];
 				tjs_int i4;
@@ -1100,42 +1102,42 @@ public:
 				{
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					*v49 = ((cur_seed >> 8) & 0xFFFFFF) | (*v49 & 0xFF000000);
-					++v49;
+					v49 += 1;
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					*v49 = ((cur_seed >> 8) & 0xFFFFFF) | (*v49 & 0xFF000000);
-					++v49;
+					v49 += 1;
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					*v49 = ((cur_seed >> 8) & 0xFFFFFF) | (*v49 & 0xFF000000);
-					++v49;
+					v49 += 1;
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					*v49 = ((cur_seed >> 8) & 0xFFFFFF) | (*v49 & 0xFF000000);
-					++v49;
+					v49 += 1;
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 				}
 				if (i4 > 2)
 				{
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					*v49 = ((cur_seed >> 8) & 0xFFFFFF) | (*v49 & 0xFF000000);
-					++v49;
+					v49 += 1;
 				}
 				if (i4 > 1)
 				{
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					*v49 = ((cur_seed >> 8) & 0xFFFFFF) | (*v49 & 0xFF000000);
-					++v49;
+					v49 += 1;
 				}
 				if (i4 > 0)
 				{
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					*v49 = ((cur_seed >> 8) & 0xFFFFFF) | (*v49 & 0xFF000000);
-					++v49;
+					v49 += 1;
 				}
 				write_buffer_offset += mainImageBufferPitch / sizeof(tjs_uint32);
 			}
 		}
 		else
 		{
-			for (tjs_int i5 = h; i5; --i5)
+			for (tjs_int i5 = h; i5; i5 -= 1)
 			{
 				tjs_uint32 *v46 = &write_buffer_offset[l];
 				tjs_int i6;
@@ -1148,9 +1150,9 @@ public:
 					cur_seed = 0x7D2B89DD * cur_seed + 1;
 					tjs_int v52 = cur_seed;
 					*v46 = (((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)v53) >> 16)) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(v51)) >> 16)) << 8) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)v51) >> 16)) << 16)) & 0xFFFFFF) | (*v46 & 0xFF000000);
-					++v46;
+					v46 += 1;
 					*v46 = (((tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(v52)) >> 16)) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)v52) >> 16)) << 8) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(v53)) >> 16)) << 16)) & 0xFFFFFF) | (*v46 & 0xFF000000);
-					++v46;
+					v46 += 1;
 				}
 				while (i6)
 				{
@@ -1162,8 +1164,8 @@ public:
 					tjs_int v53 = cur_seed;
 #endif
 					*v46 = (((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)cur_seed) >> 16)) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)HIWORD(v51)) >> 16)) << 8) | ((tjs_uint8)(under + ((upper_under_diff * (unsigned int)(tjs_uint16)v51) >> 16)) << 16)) & 0xFFFFFF) | (*v46 & 0xFF000000);
-					++v46;
-					--i6;
+					v46 += 1;
+					i6 -= 1;
 				}
 				write_buffer_offset += mainImageBufferPitch / sizeof(tjs_uint32);
 			}
@@ -1213,30 +1215,33 @@ public:
 			tjs_uint32 Block[0x100];
 			if (contrast <= 0)
 			{
-				for (int i = 0; i < 256; ++i)
+				for (int i = 0; i < 256; i += 1)
 					Block[i] = i * (2 * contrast + 255) / 255 - contrast;
 			}
 			else
 			{
 				int j = 0;
-				for (j = 0; j < contrast; ++j)
+				for (j = 0; j < contrast; j += 1)
 					Block[j] = 0;
 				while (j < (255 - contrast))
 				{
 					Block[j] = 255 * (j - contrast) / (255 - 2 * contrast);
-					++j;
+					j += 1;
 				}
 				while (j < 256)
-					Block[j++] = 255;
+				{
+					Block[j] = 255;
+					j += 1;
+				}
 			}
 			tjs_uint32 *v26 = mainImageBufferForWrite;
-			for (tjs_int k = imageHeight; k; --k)
+			for (tjs_int k = imageHeight; k; k -= 1)
 			{
 				tjs_uint32 *v13 = v26;
-				for (tjs_int m = imageWidth; m; --m)
+				for (tjs_int m = imageWidth; m; m -= 1)
 				{
 					*v13 = Block[(tjs_uint8)*v13] | (Block[(tjs_uint8)BYTE1(*v13)] << 8) | (Block[(tjs_uint8)BYTE2(*v13)] << 16) | (*v13 & 0xFF000000);
-					++v13;
+					v13 += 1;
 				}
 				v26 += mainImageBufferPitch / sizeof(tjs_uint32);
 			}
