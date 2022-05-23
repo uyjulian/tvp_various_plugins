@@ -465,7 +465,7 @@ public:
 		if (numparams > 6 && param[6]->Type() != tvtVoid)
 			per = (int)(((tjs_real)*param[6]) * 256.0);
 		void (*alphablend)(tjs_uint32 *, int, tjs_uint32 *, int, int, int, int) = fn_yes_alphablend;
-		if (numparams > 7 && param[7]->Type() != tvtVoid && !(*param[7]))
+		if (numparams > 7 && param[7]->Type() != tvtVoid && (((tjs_int)*param[7]) == 0))
 			alphablend = fn_no_alphablend;
 		int dl = 0;
 		if (numparams > 8 && param[8]->Type() != tvtVoid)
