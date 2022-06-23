@@ -137,7 +137,7 @@ static void sub_10001260(tjs_uint32 *a1, int a2, int a3, int a4)
 	line_vars.height_minus_one = a4 - 1;
 }
 
-int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
+void sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 {
 	int v7;
 	int v8;
@@ -146,7 +146,7 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 	int v11;
 	int v12;
 	int v13;
-	int result;
+	int v14;
 	int v15;
 	int v16;
 	int v17;
@@ -202,7 +202,7 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 	{
 		if ( !v7 )
 			v39 = 1;
-		result = ((y2 << 16) - (y1 << 16)) / v39;
+		v14 = ((y2 << 16) - (y1 << 16)) / v39;
 		v23 = ((v10 - v9) >> 31) | 1;
 		v34 = y1 << 16;
 		v24 = v9 >> 16;
@@ -213,7 +213,7 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 		{
 			v25 = color;
 			v47 = (color >> 16) & 0xFF;
-			result = v25 >> 8;
+			v14 = v25 >> 8;
 			v40 = (tjs_uint8)v25;
 			for (int i = 0; i < v39; i += 1)
 			{
@@ -221,14 +221,14 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 				v11 = (tjs_uint16)v11;
 				v45 = v26 + v31;
 				v27 = line_vars.buffer[v26];
-				line_vars.buffer[v26] = (((result + (v11 * ((*((tjs_uint8*)&(v27)+1)) - result) >> 16)) | ((((tjs_uint8)(v11 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v26] >> 16) - v47) >> 16)
+				line_vars.buffer[v26] = (((v14 + (v11 * (((v27 >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)(v11 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v26] >> 16) - v47) >> 16)
 																																												+ (tjs_uint8)v47) | 0xFFFFFF00) << 8)) << 8) | (v40 + (v11 * ((line_vars.buffer[v26] & 0xFF) - v40) >> 16));
 				v28 = line_vars.buffer[v26 + v31];
-				v29 = (0xFFFF - (tjs_uint16)v11) * ((*((tjs_uint8*)&(v28)+1)) - result);
-				(*((tjs_uint8*)&(v26))) = v47 + ((0xFFFF - (tjs_uint16)v11) * ((tjs_uint32)(*((tjs_uint8*)&(v28)+2)) - v47) >> 16);
+				v29 = (0xFFFF - (tjs_uint16)v11) * (((v28 >> 8) & 0xFF) - v14);
+				v26 = (v26 & 0xFFFFFF00) | (v47 + ((0xFFFF - (tjs_uint16)v11) * ((tjs_uint32)(((v28 >> 16) & 0xFF)) - v47) >> 16));
 				v30 = (0xFFFF - (tjs_uint16)v11) * ((tjs_uint8)v28 - v40);
 				v11 = v38 + v34;
-				line_vars.buffer[v45] = (((result + (v29 >> 16)) | ((v26 | 0xFFFFFF00) << 8)) << 8) | (v40 + (v30 >> 16));
+				line_vars.buffer[v45] = (((v14 + (v29 >> 16)) | ((v26 | 0xFFFFFF00) << 8)) << 8) | (v40 + (v30 >> 16));
 				v24 = v37 + v42;
 				v42 += v37;
 				v34 += v38;
@@ -242,12 +242,11 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 		v44 = v9;
 		v13 = ((v12 - (y1 << 16)) >> 31) | 1;
 		v35 = (v10 - v9) / v43;
-		result = v43;
 		if ( v43 )
 		{
 			v15 = v31 * (tjs_int16)y1;
 			v16 = (color >> 16) & 0xFF;
-			result = (tjs_uint16)color >> 8;
+			v14 = (tjs_uint16)color >> 8;
 			v17 = (tjs_uint8)color;
 			v33 = v31 * v13;
 			v46 = (color >> 16) & 0xFF;
@@ -257,10 +256,10 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 				v18 = v15 + (v9 >> 16);
 				v19 = (tjs_uint16)v9;
 				v20 = line_vars.buffer[v18];
-				line_vars.buffer[v18] = (((result + (v19 * ((*((tjs_uint8*)&(v20)+1)) - result) >> 16)) | ((((tjs_uint8)(v19 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18] >> 16) - v16) >> 16)
+				line_vars.buffer[v18] = (((v14 + (v19 * (((v20 >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)(v19 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18] >> 16) - v16) >> 16)
 																																												+ (tjs_uint8)v16) | 0xFFFFFF00) << 8)) << 8) | (v17 + (v19 * ((line_vars.buffer[v18] & 0xFF) - v17) >> 16));
 				v21 = line_vars.buffer[v18 + 1];
-				line_vars.buffer[v18 + 1] = (((result + ((0xFFFF - v19) * ((*((tjs_uint8*)&(v21)+1)) - result) >> 16)) | ((((tjs_uint8)((0xFFFF - v19) * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18 + 1] >> 16) - v46) >> 16) + (tjs_uint8)v46) | 0xFFFFFF00) << 8)) << 8) | (v17 + ((0xFFFF - v19) * ((line_vars.buffer[v18 + 1] & 0xFF) - v17) >> 16));
+				line_vars.buffer[v18 + 1] = (((v14 + ((0xFFFF - v19) * (((v21 >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)((0xFFFF - v19) * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18 + 1] >> 16) - v46) >> 16) + (tjs_uint8)v46) | 0xFFFFFF00) << 8)) << 8) | (v17 + ((0xFFFF - v19) * ((line_vars.buffer[v18 + 1] & 0xFF) - v17) >> 16));
 				v9 = v35 + v44;
 				v15 = v33 + v41;
 				v44 += v35;
@@ -269,7 +268,6 @@ int sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
 			}
 		}
 	}
-	return result;
 }
 
 static tjs_error TJS_INTF_METHOD
@@ -307,13 +305,13 @@ drawAALine(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDisp
 	return TJS_S_OK;
 }
 
-static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
+static void sub_100012A0(int x1, int y1, int x2, int y2, int color)
 {
 	int v5;
 	int v6;
 	int v7;
 	int v8;
-	int result;
+	int v9;
 	int v11;
 	int v12;
 	int v13;
@@ -352,7 +350,7 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		v8 = y1 - y2;
 	else
 		v8 = y2 - y1;
-	result = line_vars.pitch >> 2;
+	v9 = line_vars.pitch >> 2;
 	v28 = v8;
 	if ( v5 < v8 )
 	{
@@ -364,9 +362,9 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		if ( v15 >> 1 )
 		{
 			v33 = 2 * v5;
-			v17 = y2 * result;
-			v18 = y1 * result;
-			v19 = v26 * result;
+			v17 = y2 * v9;
+			v18 = y1 * v9;
+			v19 = v26 * v9;
 			v34 = v26 * v16 + y1;
 			for (int i = 0; i < v16; i += 1)
 			{
@@ -399,9 +397,9 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		v11 = -v5;
 		v32 = v5 + 1;
 		v29 = 2 * v8;
-		v12 = v7 * result;
-		v13 = y1 * result;
-		v30 = v26 * result;
+		v12 = v7 * v9;
+		v13 = y1 * v9;
+		v30 = v26 * v9;
 		for (int i = 0; i < ((v5 + 1) >> 1); i += 1)
 		{
 			line_vars.buffer[v13 + x1] = color;
@@ -422,12 +420,10 @@ static int sub_100012A0(int x1, int y1, int x2, int y2, int color)
 		if ( v32 % 2 )
 		{
 LABEL_24:
-			result = x1 + v6 * result;
-			line_vars.buffer[result] = color;
-			return result;
+			v9 = x1 + v6 * v9;
+			line_vars.buffer[v9] = color;
 		}
 	}
-	return result;
 }
 
 static tjs_error TJS_INTF_METHOD
