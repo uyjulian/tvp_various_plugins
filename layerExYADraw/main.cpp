@@ -17,96 +17,111 @@ typedef struct layer_info_x_
 } layer_info_x;
 
 
-#define LAST_IND(x, part_type) (sizeof(x) / sizeof(part_type) - 1)
-#define HIGH_IND(x, part_type) LAST_IND(x, part_type)
-#define LOW_IND(x, part_type) 0
-
-#define BYTEn(x, n) (*((tjs_uint8 *)&(x) + n))
-#define WORDn(x, n) (*((tjs_uint16 *)&(x) + n))
-#define DWORDn(x, n) (*((tjs_uint32 *)&(x) + n))
-
 #ifndef LOBYTE
-#define LOBYTE(x) BYTEn(x, LOW_IND(x, tjs_uint8))
+#define LOBYTE(x) (((x) >> 0) & 0xFF)
 #endif
-#ifndef LOWORD
-#define LOWORD(x) WORDn(x, LOW_IND(x, tjs_uint16))
-#endif
-#define LODWORD(x) DWORDn(x, LOW_IND(x, tjs_uint32))
 #ifndef HIBYTE
-#define HIBYTE(x) BYTEn(x, HIGH_IND(x, tjs_uint8))
+#define HIBYTE(x) (((x) >> 24) & 0xFF)
 #endif
-#ifndef HIWORD
-#define HIWORD(x) WORDn(x, HIGH_IND(x, tjs_uint16))
-#endif
-#define HIDWORD(x) DWORDn(x, HIGH_IND(x, tjs_uint32))
-#define BYTE1(x) BYTEn(x, 1)
-#define BYTE2(x) BYTEn(x, 2)
-#define BYTE3(x) BYTEn(x, 3)
-#define BYTE4(x) BYTEn(x, 4)
-#define BYTE5(x) BYTEn(x, 5)
-#define BYTE6(x) BYTEn(x, 6)
-#define BYTE7(x) BYTEn(x, 7)
-#define BYTE8(x) BYTEn(x, 8)
-#define BYTE9(x) BYTEn(x, 9)
-#define BYTE10(x) BYTEn(x, 10)
-#define BYTE11(x) BYTEn(x, 11)
-#define BYTE12(x) BYTEn(x, 12)
-#define BYTE13(x) BYTEn(x, 13)
-#define BYTE14(x) BYTEn(x, 14)
-#define BYTE15(x) BYTEn(x, 15)
-#define WORD1(x) WORDn(x, 1)
-#define WORD2(x) WORDn(x, 2)
-#define WORD3(x) WORDn(x, 3)
-#define WORD4(x) WORDn(x, 4)
-#define WORD5(x) WORDn(x, 5)
-#define WORD6(x) WORDn(x, 6)
-#define WORD7(x) WORDn(x, 7)
+#define BYTE1(x) (((x) >> 8) & 0xFF)
+#define BYTE2(x) (((x) >> 16) & 0xFF)
 
-unsigned int calc_pixel(unsigned int a1, unsigned int a2, int a3)
+// FIXME: Figure out why anti aliasing and alpha blending are not working properly
+
+
+static tjs_uint32 bounded_read(const layer_info_x *layerinfo, int index)
 {
-	return (((BYTE1(a1) + ((a3 * (BYTE1(a2) - (unsigned int)BYTE1(a1))) >> 16)) | (((BYTE2(a1) + ((a3 * (BYTE2(a2) - (unsigned int)BYTE2(a1))) >> 16)) | ((HIBYTE(a1) + ((unsigned int)(a3 * (HIBYTE(a2) - HIBYTE(a1))) >> 16)) << 8)) << 8)) << 8) | ((tjs_uint8)a1 + ((a3 * ((tjs_uint8)a2 - (unsigned int)(tjs_uint8)a1)) >> 16));
+	if (index <= ((layerinfo->mainImageBufferPitch / 4) * (layerinfo->imageHeight - 1)) || index > 0)
+	{
+		return 0xFF000000;
+	}
+	return layerinfo->mainImageBufferForWrite[index];
 }
 
-void sub_10001B80(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6)
+static void bounded_write(const layer_info_x *layerinfo, int index, tjs_uint32 color)
 {
-	tjs_uint32 *mainImageBufferForWrite;
-	bool v9;
-	int v11;
-	int v12;
-	int v13;
-	int v14;
-	int v15;
-	int v16;
-	int v17;
-	int v18;
-	int v19;
-	int v21;
-	int v22;
-	int v23;
-	int v24;
-	int v25;
-	int v26;
-	int v27;
-	int v28;
-	int v29;
-	int v30;
-	int v31;
-	int v32;
-	int v33;
-	int v34;
-	int v35;
-	int v36;
-	int v37;
+	if (index <= ((layerinfo->mainImageBufferPitch / 4) * (layerinfo->imageHeight - 1)) || index > 0)
+	{
+		return;
+	}
+	layerinfo->mainImageBufferForWrite[index] = color;
+}
 
-	mainImageBufferForWrite = layerinfo->mainImageBufferForWrite;
-	v9 = a3 <= a5;
-	v36 = (int)layerinfo->mainImageBufferPitch >> 2;
-	if (v9)
+unsigned int calc_pixel(unsigned int a1, unsigned int a2, unsigned int a3)
+{
+	return 0
+	| ((a1 & 0xFF) + ((a3 * ((a2 & 0xFF) - (tjs_uint32)(a1 & 0xFF))) >> 16))
+	| (
+		(
+			(tjs_uint32)BYTE1(a1)
+				+ (
+					(
+						a3
+						* (
+							(tjs_uint32)BYTE1(a2) - (tjs_uint32)BYTE1(a1)
+						)
+					) >> 16
+				)
+		) << 8
+	)
+	| (
+		(
+			(tjs_uint32)BYTE2(a1)
+				+ (
+					(
+						a3
+						* (
+							(tjs_uint32)BYTE2(a2) - (tjs_uint32)BYTE2(a1)
+						)
+					) >> 16
+				)
+		) << 16
+	)
+	| (
+		(
+			(tjs_uint32)HIBYTE(a1)
+				+ (
+					(
+						a3
+						* (
+							(tjs_uint32)HIBYTE(a2) - (tjs_uint32)HIBYTE(a1)
+						)
+					) >> 16
+				)
+		) << 24
+	);
+}
+
+void sub_10001B80(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5, tjs_uint32 color)
+{
+	int v11; // eax
+	int v12; // edx
+	int v13; // ebp
+	int v14; // esi
+	int v15; // ecx
+	int v16; // ebx
+	int v18; // esi
+	int v19; // esi
+	int v21; // esi
+	int v22; // eax
+	int v23; // esi
+	int v24; // ebx
+	int v25; // edx
+	int v29; // [esp+14h] [ebp-18h]
+	int v31; // [esp+18h] [ebp-14h]
+	int v32; // [esp+20h] [ebp-Ch]
+	int v33; // [esp+20h] [ebp-Ch]
+	int v34; // [esp+24h] [ebp-8h]
+	int v35; // [esp+28h] [ebp-4h]
+	int mainImageBufferPitch; // [esp+34h] [ebp+8h]
+	int v37; // [esp+34h] [ebp+8h]
+
+	mainImageBufferPitch = layerinfo->mainImageBufferPitch / 4;
+	if ( a3 <= a5 )
 		v11 = a5 - a3;
 	else
 		v11 = a3 - a5;
-	v26 = v11;
-	if (a1 <= a2)
+	if ( a1 <= a2 )
 		v12 = a2 - a1;
 	else
 		v12 = a1 - a2;
@@ -114,516 +129,452 @@ void sub_10001B80(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a
 	v14 = a2 << 16;
 	v15 = a3 << 16;
 	v16 = a1 << 16;
-	v28 = v12;
-	if (v11 < v12)
+	if ( v11 < v12 )
 	{
-		if (!v12)
-			v28 = 1;
-		v27 = v28;
-		v33 = (v15 - v13) / v28;
+		if ( v12 == 0 )
+			v12 = 1;
+		v33 = (v15 - v13) / v12;
 		v22 = v14 >> 16;
 		v23 = ((v16 - v14) >> 31) | 1;
-		v24 = v28 * v23;
-		v25 = v36 * v22;
-		v30 = v36 * v22;
+		v24 = v12 * v23;
+		v25 = mainImageBufferPitch * v22;
 		v35 = v24 + v22;
-		while (1)
+		do
 		{
 			v31 = v25 + (v13 >> 16);
-			mainImageBufferForWrite[v31] = calc_pixel(a6, mainImageBufferForWrite[v31], (tjs_uint16)v13);
-			if (v13 >> 16 < layerinfo->clipWidth)
-				mainImageBufferForWrite[v31 + 1] = calc_pixel(
-					a6,
-					mainImageBufferForWrite[v31 + 1],
-					0xFFFF - (tjs_uint16)v13);
+			bounded_write(layerinfo, v31, calc_pixel(color, bounded_read(layerinfo, v31), (v13 & 0xFFFF)));
+			if ( (v13 >> 16) < layerinfo->clipWidth )
+				bounded_write(layerinfo, v31 + 1, calc_pixel(color, bounded_read(layerinfo, v31 + 1), 0xFFFF - (v13 & 0xFFFF)));
 			v13 += v33;
-			v30 += v36 * v23;
-			v27 -= 1;
-			if (!v27)
-				break;
-			v25 = v30;
+			v25 += mainImageBufferPitch * v23;
+			--v12;
 		}
-		v37 = (v13 >> 16) + v36 * v35;
-		mainImageBufferForWrite[v37] = calc_pixel(a6, mainImageBufferForWrite[v37], (tjs_uint16)v13);
-		if (v13 >> 16 < layerinfo->clipWidth)
+		while ( v12 );
+		v37 = (v13 >> 16) + mainImageBufferPitch * v35;
+		bounded_write(layerinfo, v37, calc_pixel(color, bounded_read(layerinfo, v37), (v13 & 0xFFFF)));
+		if ( (v13 >> 16) < layerinfo->clipWidth )
 		{
-			mainImageBufferForWrite[v37 + 1] = calc_pixel(a6, mainImageBufferForWrite[v37 + 1], 0xFFFF - (tjs_uint16)v13);
+			bounded_write(layerinfo, v37 + 1, calc_pixel(color, bounded_read(layerinfo, v37 + 1), 0xFFFF - (v13 & 0xFFFF)));
 		}
 	}
 	else
 	{
-		if (!v11)
-			v26 = 1;
+		if ( v11 == 0 )
+			v11 = 1;
 		v29 = v13 >> 16;
 		v32 = ((v15 - v13) >> 31) | 1;
-		v17 = v14;
-		v34 = (v16 - v14) / v26;
+		v34 = (v16 - v14) / v11;
 		do
 		{
-			v18 = v29 + v36 * (v17 >> 16);
-			mainImageBufferForWrite[v18] = calc_pixel(a6, mainImageBufferForWrite[v18], (tjs_uint16)v17);
-			if (v17 >> 16 < layerinfo->clipHeight)
-				mainImageBufferForWrite[v36 + v18] = calc_pixel(
-					a6,
-					mainImageBufferForWrite[v36 + v18],
-					0xFFFF - (tjs_uint16)v17);
+			v18 = v29 + mainImageBufferPitch * (v14 >> 16);
+			bounded_write(layerinfo, v18, calc_pixel(color, bounded_read(layerinfo, v18), (v14 & 0xFFFF)));
+			if ( (v14 >> 16) < layerinfo->clipHeight )
+				bounded_write(layerinfo, mainImageBufferPitch + v18, calc_pixel(color, bounded_read(layerinfo, mainImageBufferPitch + v18), 0xFFFF - (v14 & 0xFFFF)));
 			v29 += v32;
-			v17 += v34;
-			v26 -= 1;
-		} while (v26);
-		v19 = v29 + v36 * (v17 >> 16);
-		mainImageBufferForWrite[v19] = calc_pixel(a6, mainImageBufferForWrite[v19], (tjs_uint16)v17);
-		if (v17 >> 16 < layerinfo->clipHeight)
+			v14 += v34;
+			--v11;
+		}
+		while ( v11 );
+		v19 = v29 + mainImageBufferPitch * (v14 >> 16);
+		bounded_write(layerinfo, v19, calc_pixel(color, bounded_read(layerinfo, v19), (v14 & 0xFFFF)));
+		if ( (v14 >> 16) < layerinfo->clipHeight )
 		{
-			v21 = v36 + v19;
-			mainImageBufferForWrite[v21] = calc_pixel(a6, mainImageBufferForWrite[v21], 0xFFFF - (tjs_uint16)v17);
+			v21 = mainImageBufferPitch + v19;
+			bounded_write(layerinfo, v21, calc_pixel(color, bounded_read(layerinfo, v21), 0xFFFF - (v14 & 0xFFFF)));
 		}
 	}
 }
 
-int sub_10001E00(int a1, int a2, int a3, layer_info_x *layerinfo, int a5, int a6, int a7)
+void sub_10001E00(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5, tjs_uint32 color, int a7)
 {
-	tjs_uint32 *mainImageBufferForWrite;
-	int v10;
-	int v11;
-	int v12;
-	int v13;
-	int v14;
-	int v15;
-	int v16;
-	int v17;
-	int v18;
-	int v19;
-	int v20;
-	int v21;
-	int v22;
-	int v23;
-	int v24;
-	unsigned int v25;
-	int result;
-	int v27;
-	unsigned int v28;
-	int v29;
-	int v30;
-	int v31;
-	int v32;
-	int v33;
-	int v34;
-	unsigned int v35;
-	int v36;
-	unsigned int v37;
-	int v38;
-	unsigned int v39;
-	int v40;
-	int v41;
-	int v42;
-	int v43;
-	int v44;
-	int v45;
-	int v46;
-	int v47;
-	int v48;
-	int v49;
-	int v50;
-	unsigned int v51;
-	int v52;
-	int v53;
-	int v54;
-	int v55;
-	unsigned int v56;
-	unsigned int v57;
-	int v58;
-	int v59;
-	int v60;
-	unsigned int v61;
-	unsigned int v62;
-	int v63;
-	unsigned int v64;
-	int v65;
-	int v66;
-	int i;
-	int v68;
+	int v10; // edx
+	int v11; // eax
+	int v12; // edi
+	int v13; // ebp
+	int v14; // ebx
+	int v15; // ecx
+	int v16; // eax
+	int v17; // ebx
+	int v18; // ecx
+	int v19; // edi
+	tjs_uint32 v21; // ebx
+	int v22; // eax
+	tjs_uint32 v23; // edx
+	int v24; // ebp
+	tjs_uint32 v25; // ebx
+	int v27; // ebp
+	tjs_uint32 v28; // edx
+	int v29; // ebp
+	int v30; // ebp
+	int v32; // ebp
+	tjs_uint32 v33; // edx
+	int v34; // eax
+	tjs_uint32 v35; // ebx
+	int v36; // edx
+	tjs_uint32 v37; // ecx
+	int v38; // eax
+	tjs_uint32 v39; // edx
+	int v40; // ebp
+	int mainImageBufferPitch; // [esp+10h] [ebp-30h]
+	int v42; // [esp+14h] [ebp-2Ch]
+	int v43; // [esp+14h] [ebp-2Ch]
+	int v45; // [esp+18h] [ebp-28h]
+	int v48; // [esp+1Ch] [ebp-24h]
+	int v49; // [esp+1Ch] [ebp-24h]
+	int v50; // [esp+20h] [ebp-20h]
+	tjs_uint32 v51; // [esp+24h] [ebp-1Ch]
+	int v52; // [esp+24h] [ebp-1Ch]
+	int v53; // [esp+28h] [ebp-18h]
+	int v55; // [esp+2Ch] [ebp-14h]
+	tjs_uint32 v56; // [esp+2Ch] [ebp-14h]
+	tjs_uint32 v57; // [esp+30h] [ebp-10h]
+	int v58; // [esp+30h] [ebp-10h]
+	int v60; // [esp+34h] [ebp-Ch]
+	tjs_uint32 v61; // [esp+38h] [ebp-8h]
+	tjs_uint32 v62; // [esp+38h] [ebp-8h]
+	int v63; // [esp+48h] [ebp+8h]
+	tjs_uint32 v64; // [esp+48h] [ebp+8h]
+	int v65; // [esp+48h] [ebp+8h]
+	int v66; // [esp+48h] [ebp+8h]
+	tjs_uint32 v68; // [esp+4Ch] [ebp+Ch]
 
-	mainImageBufferForWrite = layerinfo->mainImageBufferForWrite;
-	v41 = (int)layerinfo->mainImageBufferPitch >> 2;
-	if (a1 <= a2)
+	mainImageBufferPitch = layerinfo->mainImageBufferPitch / 4;
+	if ( a1 <= a2 )
 	{
-		v44 = a2 - a1;
 		v10 = a2 - a1;
 	}
 	else
 	{
 		v10 = a1 - a2;
-		v44 = a1 - a2;
 	}
-	if (a3 <= a5)
+	if ( a3 <= a5 )
+	{
 		v11 = a5 - a3;
+	}
 	else
+	{
 		v11 = a3 - a5;
+	}
 	v12 = a2 << 16;
 	v13 = a5 << 16;
 	v14 = a1 << 16;
 	v15 = a3 << 16;
-	v47 = v11;
-	if (v10 < v11)
+	if ( v10 < v11 )
 	{
-		if (!v11)
-			v47 = 1;
+		if ( v11 == 0 )
+			v11 = 1;
 		v43 = ((v15 - v13) >> 31) | 1;
-		v31 = a7;
-		v32 = (tjs_int16)a5;
+		v32 = a5;
 		v45 = v12;
-		v60 = (v14 - v12) / v47;
+		v60 = (v14 - v12) / v11;
 		v33 = 0;
-		v56 = (a6 & 0xFF000000) / a7;
-		if (v47 <= a7)
+		v56 = (color & 0xFF000000) / a7;
+		if ( v11 <= a7 )
 		{
-			a7 = v47;
-			v31 = v47;
+			a7 = v11;
 		}
-		v65 = v31;
-		if (v31)
+		v65 = a7;
+		if ( a7 )
 		{
-			v68 = a6 & 0xFFFFFF;
-			v34 = v41 * v32;
-			v46 = v41 * v32;
-			while (1)
+			v68 = color & 0xFFFFFF;
+			v34 = mainImageBufferPitch * v32;
+			do
 			{
-				v54 = v56 + v33;
-				v35 = v68 | ((v56 + v33) & 0xFF000000);
+				v33 += v56;
+				v35 = v68 | (v33 & 0xFF000000);
 				v58 = v34 + (v12 >> 16);
 				v61 = v35;
-				mainImageBufferForWrite[v58] = calc_pixel(v35, mainImageBufferForWrite[v58], (tjs_uint16)v12);
-				if (v12 >> 16 < layerinfo->clipWidth)
-					mainImageBufferForWrite[v58 + 1] = calc_pixel(
-						v35,
-						mainImageBufferForWrite[v58 + 1],
-						0xFFFF - (tjs_uint16)v12);
+				bounded_write(layerinfo, v58, calc_pixel(v35, bounded_read(layerinfo, v58), (v12 & 0xFFFF)));
+				if ( (v12 >> 16) < layerinfo->clipWidth )
+					bounded_write(layerinfo, v58 + 1, calc_pixel(v35, bounded_read(layerinfo, v58 + 1), 0xFFFF - (v12 & 0xFFFF)));
 				v12 += v60;
-				v46 += v41 * v43;
-				v65 -= 1;
-				if (!v65)
-					break;
-				v34 = v46;
-				v33 = v54;
+				v34 += mainImageBufferPitch * v43;
+				--v65;
 			}
+			while ( v65 );
 			v32 += a7 * v43;
-			v31 = a7;
 			v45 = v12;
 		}
 		else
 		{
 			v35 = v61;
 		}
-		result = v47 - v31;
-		v66 = v47 - v31;
-		if (v47 != v31)
+		v66 = v11 - a7;
+		if ( v11 != a7 )
 		{
-			v36 = v41 * v32;
+			v36 = mainImageBufferPitch * v32;
 			v37 = HIBYTE(v35);
-			v49 = v41 * v32;
-			v50 = v41 * v43;
+			v49 = mainImageBufferPitch * v32;
+			v50 = mainImageBufferPitch * v43;
 			v52 = v66 * v43 + v32;
 			do
 			{
 				v38 = v36 + (v12 >> 16);
-				v39 = mainImageBufferForWrite[v38];
-				mainImageBufferForWrite[v38] = (((BYTE1(v35) + (((tjs_uint16)v12 * (BYTE1(v39) - (unsigned int)BYTE1(v35))) >> 16)) | (((BYTE2(v35) + (((tjs_uint16)v12 * (BYTE2(v39) - (unsigned int)BYTE2(v35))) >> 16)) | ((v37 + (((tjs_uint16)v12 * (HIBYTE(v39) - v37)) >> 16)) << 8)) << 8)) << 8) | ((tjs_uint8)v35 + (((tjs_uint16)v12 * ((tjs_uint8)v39 - (unsigned int)(tjs_uint8)v35)) >> 16));
+				v39 = bounded_read(layerinfo, v38);
+				bounded_write(layerinfo, v38, (((BYTE1(v35) + (((v12 & 0xFFFF) * (BYTE1(v39) - (unsigned int)BYTE1(v35))) >> 16)) | (((BYTE2(v35) + (((v12 & 0xFFFF) * (BYTE2(v39) - (unsigned int)BYTE2(v35))) >> 16)) | ((v37 + (((v12 & 0xFFFF) * (HIBYTE(v39) - v37)) >> 16)) << 8)) << 8)) << 8) | ((v35 & 0xFF) + (((v12 & 0xFFFF) * ((v39 & 0xFF) - (v35 & 0xFF))) >> 16)));
 				v37 = HIBYTE(v35);
-				if (v12 >> 16 < layerinfo->clipWidth)
+				if ( (v12 >> 16) < layerinfo->clipWidth )
 				{
 					v37 = HIBYTE(v35);
-					mainImageBufferForWrite[v38 + 1] = (((BYTE1(v35) + (((0xFFFF - (tjs_uint16)v12) * (BYTE1(mainImageBufferForWrite[v38 + 1]) - (unsigned int)BYTE1(v35))) >> 16)) | (((BYTE2(v35) + (((0xFFFF - (tjs_uint16)v12) * (BYTE2(mainImageBufferForWrite[v38 + 1]) - (unsigned int)BYTE2(v35))) >> 16)) | ((HIBYTE(v35) + ((unsigned int)((0xFFFF - (tjs_uint16)v12) * (HIBYTE(mainImageBufferForWrite[v38 + 1]) - HIBYTE(v35))) >> 16)) << 8)) << 8)) << 8) | ((tjs_uint8)v35 + (((0xFFFF - (tjs_uint16)v12) * (LOBYTE(mainImageBufferForWrite[v38 + 1]) - (unsigned int)(tjs_uint8)v35)) >> 16));
+					bounded_write(layerinfo, v38 + 1, (((BYTE1(v35) + (((0xFFFF - (v12 & 0xFFFF)) * (BYTE1(bounded_read(layerinfo, v38 + 1)) - (unsigned int)BYTE1(v35))) >> 16)) | (((BYTE2(v35) + (((0xFFFF - (v12 & 0xFFFF)) * (BYTE2(bounded_read(layerinfo, v38 + 1)) - (unsigned int)BYTE2(v35))) >> 16)) | ((HIBYTE(v35) + ((unsigned int)((0xFFFF - (v12 & 0xFFFF)) * (HIBYTE(bounded_read(layerinfo, v38 + 1)) - HIBYTE(v35))) >> 16)) << 8)) << 8)) << 8) | ((v35 & 0xFF) + (((0xFFFF - (v12 & 0xFFFF)) * (LOBYTE(bounded_read(layerinfo, v38 + 1)) - (v35 & 0xFF))) >> 16)));
 				}
 				v45 += v60;
 				v36 = v50 + v49;
 				v12 = v45;
-				result = v66 - 1;
-				v66 = result;
+				v66 -= 1;
 				v49 += v50;
-			} while (result);
+			}
+			while ( v66 );
 			v35 = v61;
 			v32 = v52;
 		}
-		if (v32 >= 0)
+		if ( v32 >= 0 && v32 <= layerinfo->clipHeight )
 		{
-			if (v32 <= layerinfo->clipHeight)
+			v40 = (v12 >> 16) + mainImageBufferPitch * v32;
+			bounded_write(layerinfo, v40, calc_pixel(v35, bounded_read(layerinfo, v40), (v12 & 0xFFFF)));
+			if ( (v12 >> 16) < layerinfo->clipWidth )
 			{
-				v40 = (v12 >> 16) + v41 * v32;
-				mainImageBufferForWrite[v40] = calc_pixel(v35, mainImageBufferForWrite[v40], (tjs_uint16)v12);
-				result = v12 >> 16;
-				if (v12 >> 16 < layerinfo->clipWidth)
-				{
-					result = calc_pixel(v35, mainImageBufferForWrite[v40 + 1], 0xFFFF - (tjs_uint16)v12);
-					mainImageBufferForWrite[v40 + 1] = result;
-				}
+				bounded_write(layerinfo, v40 + 1, calc_pixel(v35, bounded_read(layerinfo, v40 + 1), 0xFFFF - (v12 & 0xFFFF)));
 			}
 		}
 	}
 	else
 	{
-		if (!v10)
-			v44 = 1;
-		v16 = (v15 - v13) / v44;
+		if ( v10 == 0 )
+			v10 = 1;
+		v16 = (v15 - v13) / v10;
 		v17 = v14 - v12;
 		v18 = v12 >> 16;
 		v19 = a5 << 16;
 		v48 = a5 << 16;
-		v20 = a7;
 		v53 = (v17 >> 31) | 1;
 		v21 = 0;
 		v42 = v18;
 		v55 = v16;
-		v62 = (a6 & 0xFF000000) / a7;
-		v22 = v44;
-		if (v44 <= a7)
+		v62 = (color & 0xFF000000) / a7;
+		v22 = v10;
+		if ( v10 <= a7 )
 		{
-			a7 = v44;
-			v20 = v44;
+			a7 = v10;
 		}
-		v63 = v20;
-		if (v20)
+		v63 = a7;
+		if ( a7 )
 		{
-			v23 = a6 & 0xFFFFFF;
-			for (i = a6 & 0xFFFFFF;; v23 = i)
+			v23 = color & 0xFFFFFF;
+			do
 			{
-				v24 = v18 + v41 * (v19 >> 16);
-				v59 = v62 + v21;
-				v25 = v23 | ((v62 + v21) & 0xFF000000);
+				v24 = v18 + mainImageBufferPitch * (v19 >> 16);
+				v21 += v62;
+				v25 = v23 | (v21 & 0xFF000000);
 				v57 = v25;
-				mainImageBufferForWrite[v24] = calc_pixel(v25, mainImageBufferForWrite[v24], (tjs_uint16)v19);
-				if (v19 >> 16 < layerinfo->clipHeight)
-					mainImageBufferForWrite[v41 + v24] = calc_pixel(
-						v25,
-						mainImageBufferForWrite[v41 + v24],
-						0xFFFF - (tjs_uint16)v19);
+				bounded_write(layerinfo, v24, calc_pixel(v25, bounded_read(layerinfo, v24), (v19 & 0xFFFF)));
+				if ( (v19 >> 16) < layerinfo->clipHeight )
+					bounded_write(layerinfo, mainImageBufferPitch + v24, calc_pixel(v25, bounded_read(layerinfo, mainImageBufferPitch + v24), 0xFFFF - (v19 & 0xFFFF)));
 				v42 += v53;
 				v19 += v55;
 				v18 = v42;
 				v63 -= 1;
-				if (!v63)
-					break;
-				v21 = v59;
 			}
-			v22 = v44;
-			v20 = a7;
+			while ( v63 );
+			v22 = v10;
 			v48 = v19;
 		}
 		else
 		{
 			v25 = v57;
 		}
-		result = v22 - v20;
-		v64 = result;
-		if (result)
+		v64 = v22 - a7;
+		if ( v64 )
 		{
 			v51 = HIBYTE(v25);
 			do
 			{
-				v27 = v18 + v41 * (v19 >> 16);
-				mainImageBufferForWrite[v27] = (((BYTE1(v25) + (((tjs_uint16)v19 * ((tjs_uint8)BYTE1(mainImageBufferForWrite[v27]) - (unsigned int)BYTE1(v25))) >> 16)) | (((BYTE2(v25) + (((tjs_uint16)v19 * ((tjs_uint8)BYTE2(mainImageBufferForWrite[v27]) - (unsigned int)BYTE2(v25))) >> 16)) | ((v51 + (((tjs_uint16)v19 * (HIBYTE(mainImageBufferForWrite[v27]) - v51)) >> 16)) << 8)) << 8)) << 8) | ((tjs_uint8)v25 + (((tjs_uint16)v19 * ((tjs_uint8)mainImageBufferForWrite[v27] - (unsigned int)(tjs_uint8)v25)) >> 16));
-				if (v19 >> 16 < layerinfo->clipHeight)
+				v27 = v18 + mainImageBufferPitch * (v19 >> 16);
+				bounded_write(layerinfo, v27, (((BYTE1(v25) + (((v19 & 0xFFFF) * ((BYTE1(bounded_read(layerinfo, v27)) & 0xFF) - (unsigned int)BYTE1(v25))) >> 16)) | (((BYTE2(v25) + (((v19 & 0xFFFF) * ((BYTE2(bounded_read(layerinfo, v27)) & 0xFF) - (unsigned int)BYTE2(v25))) >> 16)) | ((v51 + (((v19 & 0xFFFF) * (HIBYTE(bounded_read(layerinfo, v27)) - v51)) >> 16)) << 8)) << 8)) << 8) | ((v25 & 0xFF) + (((v19 & 0xFFFF) * ((bounded_read(layerinfo, v27) & 0xFF) - (unsigned int)(v25 & 0xFF))) >> 16)));
+				if ( (v19 >> 16) < layerinfo->clipHeight )
 				{
-					v28 = mainImageBufferForWrite[v41 + v27];
-					mainImageBufferForWrite[v41 + v27] = (((BYTE1(v25) + (((0xFFFF - (tjs_uint16)v19) * (BYTE1(v28) - (unsigned int)BYTE1(v25))) >> 16)) | (((BYTE2(v25) + (((0xFFFF - (tjs_uint16)v19) * (BYTE2(v28) - (unsigned int)BYTE2(v25))) >> 16)) | ((v51 + (((0xFFFF - (tjs_uint16)v19) * (HIBYTE(v28) - v51)) >> 16)) << 8)) << 8)) << 8) | ((tjs_uint8)v25 + (((0xFFFF - (tjs_uint16)v19) * ((tjs_uint8)v28 - (unsigned int)(tjs_uint8)v25)) >> 16));
+					v28 = bounded_read(layerinfo, mainImageBufferPitch + v27);
+					bounded_write(layerinfo, mainImageBufferPitch + v27, (((BYTE1(v25) + (((0xFFFF - (v19 & 0xFFFF)) * (BYTE1(v28) - (unsigned int)BYTE1(v25))) >> 16)) | (((BYTE2(v25) + (((0xFFFF - (v19 & 0xFFFF)) * (BYTE2(v28) - (unsigned int)BYTE2(v25))) >> 16)) | ((v51 + (((0xFFFF - (v19 & 0xFFFF)) * (HIBYTE(v28) - v51)) >> 16)) << 8)) << 8)) << 8) | ((v25 & 0xFF) + (((0xFFFF - (v19 & 0xFFFF)) * ((v28 & 0xFF) - (unsigned int)(v25 & 0xFF))) >> 16)));
 				}
 				v42 += v53;
 				v48 += v55;
 				v19 = v48;
 				v18 = v42;
-				result = v64 - 1;
-				v64 = result;
-			} while (result);
+				v64 -= 1;
+			}
+			while ( v64 );
 			v25 = v57;
 		}
-		if (v18 >= 0)
+		if ( v18 >= 0 && v18 <= layerinfo->clipWidth )
 		{
-			if (v18 <= layerinfo->clipWidth)
+			v29 = v18 + mainImageBufferPitch * (v19 >> 16);
+			bounded_write(layerinfo, v29, calc_pixel(v25, bounded_read(layerinfo, v29), v19 & 0xFFFF));
+			if ( (v19 >> 16) < layerinfo->clipHeight )
 			{
-				v29 = v18 + v41 * (v19 >> 16);
-				mainImageBufferForWrite[v29] = calc_pixel(v25, mainImageBufferForWrite[v29], (tjs_uint16)v19);
-				result = v19 >> 16;
-				if (v19 >> 16 < layerinfo->clipHeight)
-				{
-					v30 = v41 + v29;
-					result = calc_pixel(v25, mainImageBufferForWrite[v30], 0xFFFF - (tjs_uint16)v19);
-					mainImageBufferForWrite[v30] = result;
-				}
+				v30 = mainImageBufferPitch + v29;
+				bounded_write(layerinfo, v30, calc_pixel(v25, bounded_read(layerinfo, v30), 0xFFFF - (v19 & 0xFFFF)));
 			}
 		}
 	}
-	return result;
 }
 
 bool bound_check_inner(
-	layer_info_x *layerinfo,
-	int a2,
-	int a3,
-	char a4,
-	int a5,
-	int a6,
-	int *a7,
-	int *a8)
+				const layer_info_x *layerinfo,
+				int left_bound,
+				int top_bound,
+				int a4,
+				int right_bound,
+				int bottom_bound,
+				int *a7,
+				int *a8)
 {
-	int v8;
-	int v9;
-	int v11;
-	int v12;
-	int v13;
+	int v9; // eax
+	int v11; // eax
+	int v12; // eax
+	int v13; // eax
 
-	v8 = a5;
-	if ((a4 & 1) != 0)
+	if ( (a4 & 1) != 0 )
 	{
-		v9 = a3 + (a6 - a3) * (layerinfo->clipLeft - a2) / (a5 - a2);
-		if (v9 >= layerinfo->clipTop && v9 <= layerinfo->clipHeight)
+		v9 = top_bound + (bottom_bound - top_bound) * (layerinfo->clipLeft - left_bound) / (right_bound - left_bound);
+		if ( v9 >= layerinfo->clipTop && v9 <= layerinfo->clipHeight )
 		{
 			*a7 = layerinfo->clipLeft;
 			*a8 = v9;
 			return true;
 		}
-		v8 = a5;
 	}
-	if ((a4 & 2) != 0)
+	if ( (a4 & 2) != 0 )
 	{
-		v11 = a3 + (a6 - a3) * (layerinfo->clipWidth - a2) / (v8 - a2);
-		if (v11 >= layerinfo->clipTop && v11 <= layerinfo->clipHeight)
+		v11 = top_bound + (bottom_bound - top_bound) * (layerinfo->clipWidth - left_bound) / (right_bound - left_bound);
+		if ( v11 >= layerinfo->clipTop && v11 <= layerinfo->clipHeight )
 		{
 			*a7 = layerinfo->clipWidth;
 			*a8 = v11;
 			return true;
 		}
-		v8 = a5;
 	}
-	if ((a4 & 4) != 0)
+	if ( (a4 & 4) != 0 )
 	{
-		v12 = a2 + (v8 - a2) * (layerinfo->clipTop - a3) / (a6 - a3);
-		if (v12 >= layerinfo->clipLeft && v12 <= layerinfo->clipWidth)
+		v12 = left_bound + (right_bound - left_bound) * (layerinfo->clipTop - top_bound) / (bottom_bound - top_bound);
+		if ( v12 >= layerinfo->clipLeft && v12 <= layerinfo->clipWidth )
 		{
 			*a7 = v12;
 			*a8 = layerinfo->clipTop;
 			return true;
 		}
-		v8 = a5;
 	}
-	if ((a4 & 8) == 0)
-		return false;
-	v13 = a2 + (v8 - a2) * (layerinfo->clipHeight - a3) / (a6 - a3);
-	if (v13 < layerinfo->clipLeft || v13 > layerinfo->clipWidth)
-		return false;
-	*a7 = v13;
-	*a8 = layerinfo->clipHeight;
-	return true;
+	if ( (a4 & 8) != 0 )
+	{
+		v13 = left_bound + (right_bound - left_bound) * (layerinfo->clipHeight - top_bound) / (bottom_bound - top_bound);
+		if ( v13 >= layerinfo->clipLeft && v13 <= layerinfo->clipWidth )
+		{
+			*a7 = v13;
+			*a8 = layerinfo->clipHeight;
+			return true;
+		}
+	}
+	return false;
 }
 
-bool bound_check(layer_info_x *layerinfo, int *a2, int *a3, int *a4, int *a5)
+bool bound_check(const layer_info_x *layerinfo, int *left_bound, int *top_bound, int *right_bound, int *bottom_bound)
 {
-	int v5;
-	int clipLeft;
-	int v7;
-	int v8;
-	int v9;
-	int v10;
-	int v11;
+	int v8; // ecx
+	int v11; // ebp
 
-	v5 = *a3;
-	clipLeft = layerinfo->clipLeft;
-	v7 = *a2;
 	v8 = 0;
-	if (*a2 >= clipLeft)
+	if ( *left_bound >= layerinfo->clipLeft )
 	{
-		if (v7 > layerinfo->clipWidth)
+		if ( *left_bound > layerinfo->clipWidth )
 			v8 = 2;
 	}
 	else
 	{
 		v8 = 1;
 	}
-	if (v5 >= layerinfo->clipTop)
+	if ( *top_bound >= layerinfo->clipTop )
 	{
-		if (v5 > layerinfo->clipHeight)
-			v8 |= 8u;
+		if ( *top_bound > layerinfo->clipHeight )
+			v8 |= 8;
 	}
 	else
 	{
-		v8 |= 4u;
+		v8 |= 4;
 	}
-	v9 = *a5;
-	v10 = *a4;
 	v11 = 0;
-	if (*a4 >= clipLeft)
+	if ( *right_bound >= layerinfo->clipLeft )
 	{
-		if (v10 > layerinfo->clipWidth)
+		if ( *right_bound > layerinfo->clipWidth )
 			v11 = 2;
 	}
 	else
 	{
 		v11 = 1;
 	}
-	if (v9 >= layerinfo->clipTop)
+	if ( *bottom_bound >= layerinfo->clipTop )
 	{
-		if (v9 > layerinfo->clipHeight)
-			v11 |= 8u;
+		if ( *bottom_bound > layerinfo->clipHeight )
+			v11 |= 8;
 	}
 	else
 	{
-		v11 |= 4u;
+		v11 |= 4;
 	}
-	return !(v8 + v11) || ((v11 & v8) == 0 && (!v8 || bound_check_inner(layerinfo, v7, *a3, v8, v10, v9, a2, a3)) && (!v11 || bound_check_inner(layerinfo, *a2, *a3, v11, *a4, *a5, a4, a5)));
+	return ((v8 + v11) != 0 || (v11 & v8) == 0) && (!v8 || bound_check_inner(layerinfo, *left_bound, *top_bound, v8, *right_bound, *bottom_bound, left_bound, top_bound)) && (!v11 || bound_check_inner(layerinfo, *left_bound, *top_bound, v11, *right_bound, *bottom_bound, right_bound, bottom_bound));
 }
 
 void sub_10001450(
-	layer_info_x *layerinfo,
+	const layer_info_x *layerinfo,
 	tTVPRect *updaterect,
 	int cx,
 	int cy,
-	int cmax,
 	int cmin,
-	int lmax,
+	int cmax,
 	int lmin,
-	int emax,
+	int lmax,
 	int emin,
-	int color)
+	int emax,
+	tjs_uint32 color)
 {
 	int v12 = TVPGetTickCount();
-	int v13 = (32 * (((((v12 - 1831433054) << 13) ^ (v12 - 1831433054)) >> 7) ^ ((v12 - 1831433054) << 13) ^ (v12 - 1831433054))) ^ ((((v12 - 1831433054) << 13) ^ (v12 - 1831433054)) >> 7) ^ ((v12 - 1831433054) << 13) ^ (v12 - 1831433054);
-	int v38 = lmax + ((((v13 & 0xffff) >> 16) * (lmax - lmin)) >> 16);
+	int v13 = (32 * (((((v12 - 0x6D29735E) << 13) ^ (v12 - 0x6D29735E)) >> 7) ^ ((v12 - 0x6D29735E) << 13) ^ (v12 - 0x6D29735E))) ^ ((((v12 - 0x6D29735E) << 13) ^ (v12 - 0x6D29735E)) >> 7) ^ ((v12 - 0x6D29735E) << 13) ^ (v12 - 0x6D29735E);
+	int v38 = lmin + ((((v13 & 0xffff0000) >> 16) * (lmax - lmin)) >> 16);
 	if (v38)
 	{
-		// TODO: check if emax/emin are in the correct variables
-		int v14 = emax - emin;
-		int v15 = cmax - cmin;
+		int ediff = emax - emin;
+		int cdiff = cmax - cmin;
 		while (1)
 		{
 			int v16 = (((v13 << 13) ^ v13) >> 7) ^ (v13 << 13) ^ v13;
 			int v17 = (32 * v16) ^ v16;
-			int v35 = cmax + ((v15 * ((v17 & 0xffff) >> 16)) >> 16);
+			int ccalc = cmin + ((cdiff * ((v17 & 0xffff0000) >> 16)) >> 16);
 			int v18 = (((v17 << 13) ^ v17) >> 7) ^ (v17 << 13) ^ v17;
 			int v19 = (32 * v18) ^ v18;
 			int v21 = (((v19 << 13) ^ v19) >> 7) ^ (v19 << 13) ^ v19;
-			int v34 = emax + ((v14 * ((v19 & 0xffff) >> 16)) >> 16);
 			v13 = (32 * v21) ^ v21;
+			int ecalc = emin + ((ediff * ((v19 & 0xffff0000) >> 16)) >> 16);
+			
 			double v36 = (double)v13 * 2.328306436538696e-10 * 3.141592653589793 + (double)v13 * 2.328306436538696e-10 * 3.141592653589793;
-			int v33X = (int)((double)v35 * cos(v36) + (double)cy);
-			int v36X = (int)((double)v35 * sin(v36) + (double)cx);
-			int v35X = (int)((double)v34 * cos(v36) + (double)cy);
-			int v34X = (int)((double)v34 * sin(v36) + (double)cx);
-			if (bound_check(layerinfo, &v33X, &v36X, &v35X, &v34X))
+			int left_bound = (int)((double)ccalc * cos(v36) + (double)cx);
+			int top_bound = (int)((double)ccalc * sin(v36) + (double)cy);
+			int right_bound = (int)((double)ecalc * cos(v36) + (double)cx);
+			int bottom_bound = (int)((double)ecalc * sin(v36) + (double)cy);
+			if (bound_check(layerinfo, &left_bound, &top_bound, &right_bound, &bottom_bound))
 			{
-				if (v15 <= 0)
-					sub_10001B80(v34X, v36X, v35X, layerinfo, v33X, color);
-				else
-					sub_10001E00(v35X, v33X, v34X, layerinfo, v36X, color, v15);
+				// if (cdiff <= 0)
+				// 	sub_10001B80(bottom_bound, top_bound, right_bound, layerinfo, left_bound, color);
+				// else
+				sub_10001E00(right_bound, left_bound, bottom_bound, layerinfo, top_bound, color, cdiff);
 			}
 			v38 -= 1;
 			if (!v38)
 				break;
 		}
 	}
-	int clipLeft = cy - cmax;
-	int clipTop = cx - cmax;
-	int clipWidth = cy + cmax;
-	int clipHeight = cx + cmax;
-	if (cy - lmax < layerinfo->clipLeft)
+	int clipLeft = cx - cmax;
+	int clipTop = cy - cmax;
+	int clipWidth = cx + cmax;
+	int clipHeight = cy + cmax;
+	if (clipLeft < layerinfo->clipLeft)
 		clipLeft = layerinfo->clipLeft;
 	if (clipTop < layerinfo->clipTop)
 		clipTop = layerinfo->clipTop;
@@ -649,27 +600,48 @@ public:
 
 		int cx = *param[0]; // Center X coordinate
 		int cy = *param[1]; // Center Y coordinate
-		int cmin = 100; // Minimum distance from the center to the appearance of the line
-		if (numparams >= 3 && param[2]->Type() != tvtVoid)
+		int cmin = 50; // Minimum distance from the center to the appearance of the line
+		if (numparams > 2 && param[2]->Type() != tvtVoid)
 			cmin = *param[2];
 		int cmax = 100; // Maximum distance from the center to the appearance of the line
-		if (numparams >= 4 && param[3]->Type() != tvtVoid)
+		if (numparams > 3 && param[3]->Type() != tvtVoid)
 			cmax = *param[3];
-		int lmin = 50; // Minimum number of lines
-		if (numparams >= 5 && param[4]->Type() != tvtVoid)
+		int lmin = 25; // Minimum number of lines
+		if (numparams > 4 && param[4]->Type() != tvtVoid)
 			lmin = *param[4];
 		int lmax = 50; // Maximum number of lines
-		if (numparams >= 6 && param[5]->Type() != tvtVoid)
+		if (numparams > 5 && param[5]->Type() != tvtVoid)
 			lmax = *param[5];
 		int emin = 2000; // Minimum distance from the center until the line disappears
-		if (numparams >= 7 && param[6]->Type() != tvtVoid)
+		if (numparams > 6 && param[6]->Type() != tvtVoid)
 			emin = *param[6];
 		int emax = 2000; // Maximum distance from the center until the line disappears
-		if (numparams >= 8 && param[7]->Type() != tvtVoid)
+		if (numparams > 7 && param[7]->Type() != tvtVoid)
 			emax = *param[7];
-		int color = 0xFF000000; // Line color
-		if (numparams >= 9 && param[8]->Type() != tvtVoid)
-			color = *param[8];
+		tjs_uint32 color = 0xFF000000; // Line color
+		if (numparams > 8 && param[8]->Type() != tvtVoid)
+			color = (tjs_uint32)(tTVInteger)*param[8];
+
+		if (cmin > cmax)
+		{
+			int tmp = cmax;
+			cmax = cmin;
+			cmin = tmp;
+		}
+
+		if (lmin > lmax)
+		{
+			int tmp = lmax;
+			lmax = lmin;
+			lmin = tmp;
+		}
+
+		if (emin > emax)
+		{
+			int tmp = emax;
+			emax = emin;
+			emin = tmp;
+		}
 
 		if (objthis == NULL)
 			TVPThrowExceptionMessage(TJS_W("Specify Layer or Bitmap class object"));
@@ -693,9 +665,10 @@ public:
 		layerinfo.clipWidth = ClipRect.get_width();
 		layerinfo.clipHeight = ClipRect.get_height();
 
-		sub_10001450(&layerinfo, &UpdateRect, cx, cy, cmax, cmin, lmax, lmin, emax, emin, color);
+		sub_10001450(&layerinfo, &UpdateRect, cx, cy, cmin, cmax, lmin, lmax, emin, emax, color);
 
-		UpdateLayerWithLayerObject(bmpobject_clo, &UpdateRect, &ImageLeft, &ImageTop);
+		//UpdateLayerWithLayerObject(bmpobject_clo, &UpdateRect, &ImageLeft, &ImageTop);
+		UpdateWholeLayerWithLayerObject(bmpobject_clo);
 		return TJS_S_OK;
 	}
 };
