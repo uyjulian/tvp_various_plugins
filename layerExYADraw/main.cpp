@@ -92,7 +92,7 @@ unsigned int calc_pixel(unsigned int a1, unsigned int a2, unsigned int a3)
 	);
 }
 
-void sub_10001B80(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5, tjs_uint32 color)
+void sub_10001B80(const layer_info_x *layerinfo, int x1, int x2, int y1, int y2, tjs_uint32 color)
 {
 	int v11; // eax
 	int v12; // edx
@@ -117,18 +117,18 @@ void sub_10001B80(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5,
 	int v37; // [esp+34h] [ebp+8h]
 
 	mainImageBufferPitch = layerinfo->mainImageBufferPitch / 4;
-	if ( a3 <= a5 )
-		v11 = a5 - a3;
+	if ( x2 <= x1 )
+		v11 = x1 - x2;
 	else
-		v11 = a3 - a5;
-	if ( a1 <= a2 )
-		v12 = a2 - a1;
+		v11 = x2 - x1;
+	if ( y2 <= y1 )
+		v12 = y1 - y2;
 	else
-		v12 = a1 - a2;
-	v13 = a5 << 16;
-	v14 = a2 << 16;
-	v15 = a3 << 16;
-	v16 = a1 << 16;
+		v12 = y2 - y1;
+	v13 = x1 << 16;
+	v14 = y1 << 16;
+	v15 = x2 << 16;
+	v16 = y2 << 16;
 	if ( v11 < v12 )
 	{
 		if ( v12 == 0 )
@@ -185,7 +185,7 @@ void sub_10001B80(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5,
 	}
 }
 
-void sub_10001E00(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5, tjs_uint32 color, int a7)
+void sub_10001E00(const layer_info_x *layerinfo, int x1, int x2, int y1, int y2, tjs_uint32 color, int a7)
 {
 	int v10; // edx
 	int v11; // eax
@@ -239,32 +239,32 @@ void sub_10001E00(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5,
 	tjs_uint32 v68; // [esp+4Ch] [ebp+Ch]
 
 	mainImageBufferPitch = layerinfo->mainImageBufferPitch / 4;
-	if ( a1 <= a2 )
+	if ( x2 <= x1 )
 	{
-		v10 = a2 - a1;
+		v10 = x1 - x2;
 	}
 	else
 	{
-		v10 = a1 - a2;
+		v10 = x2 - x1;
 	}
-	if ( a3 <= a5 )
+	if ( y2 <= y1 )
 	{
-		v11 = a5 - a3;
+		v11 = y1 - y2;
 	}
 	else
 	{
-		v11 = a3 - a5;
+		v11 = y2 - y1;
 	}
-	v12 = a2 << 16;
-	v13 = a5 << 16;
-	v14 = a1 << 16;
-	v15 = a3 << 16;
+	v12 = x1 << 16;
+	v13 = y1 << 16;
+	v14 = x2 << 16;
+	v15 = y2 << 16;
 	if ( v10 < v11 )
 	{
 		if ( v11 == 0 )
 			v11 = 1;
 		v43 = ((v15 - v13) >> 31) | 1;
-		v32 = a5;
+		v32 = y1;
 		v45 = v12;
 		v60 = (v14 - v12) / v11;
 		v33 = 0;
@@ -345,8 +345,8 @@ void sub_10001E00(int a1, int a2, int a3, const layer_info_x *layerinfo, int a5,
 		v16 = (v15 - v13) / v10;
 		v17 = v14 - v12;
 		v18 = v12 >> 16;
-		v19 = a5 << 16;
-		v48 = a5 << 16;
+		v19 = y1 << 16;
+		v48 = y1 << 16;
 		v53 = (v17 >> 31) | 1;
 		v21 = 0;
 		v42 = v18;
@@ -560,10 +560,10 @@ void sub_10001450(
 			int bottom_bound = (int)((double)ecalc * sin(v36) + (double)cy);
 			if (bound_check(layerinfo, &left_bound, &top_bound, &right_bound, &bottom_bound))
 			{
-				// if (cdiff <= 0)
-				// 	sub_10001B80(bottom_bound, top_bound, right_bound, layerinfo, left_bound, color);
-				// else
-				sub_10001E00(right_bound, left_bound, bottom_bound, layerinfo, top_bound, color, cdiff);
+				if (cdiff <= 0)
+					sub_10001B80(layerinfo, left_bound, right_bound, top_bound, bottom_bound, color);
+				else
+					sub_10001E00(layerinfo, left_bound, right_bound, top_bound, bottom_bound, color, cdiff);
 			}
 			v38 -= 1;
 			if (!v38)
