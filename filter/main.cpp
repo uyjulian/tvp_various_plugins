@@ -7,6 +7,17 @@
 #include <cmath>
 #include <limits>
 
+#define LAST_IND(x, part_type) (sizeof(x) / sizeof(part_type) - 1)
+#define HIGH_IND(x, part_type) LAST_IND(x, part_type)
+#define LOW_IND(x, part_type) 0
+
+#define BYTEn(x, n) (*((tjs_uint8 *)&(x) + n))
+#define WORDn(x, n) (*((tjs_uint16 *)&(x) + n))
+#define DWORDn(x, n) (*((tjs_uint32 *)&(x) + n))
+
+#define LODWORD(x) DWORDn(x, LOW_IND(x, tjs_uint32))
+#define HIDWORD(x) DWORDn(x, HIGH_IND(x, tjs_uint32))
+
 #if 0
 static tjs_error TJS_INTF_METHOD
 Vortex(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2 *objthis) {
@@ -622,29 +633,28 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 					{
 						v30 = 1566083941ll * (tjs_uint32)v29;
 						v29 = v30 + 1;
-						(*((tjs_uint32*)&(v30)+1)) = ((v29 & 0xFF000000) >> 24) | ((v29 & 0xFF000000) >> 16) | ((v29 & 0xFF000000) >> 8) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
-						v27[0] = (*((tjs_uint32*)&(v30)+1));
+						HIDWORD(v30) = ((v29 & 0xFF000000) >> 24) | ((v29 & 0xFF000000) >> 16) | ((v29 & 0xFF000000) >> 8) | ((HIDWORD(v30)) & 0xFF000000);
+						v27[0] = (HIDWORD(v30));
 						v31 = v27 + 1;
-						(*((tjs_uint32*)&(v30)+1)) = ((v29 & 0xFF0000u) >> 16) | ((v29 & 0xFF0000u) >> 8) | (v29 & 0xFF0000) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
-						v31[0] = (*((tjs_uint32*)&(v30)+1));
+						HIDWORD(v30) = ((v29 & 0xFF0000u) >> 16) | ((v29 & 0xFF0000u) >> 8) | (v29 & 0xFF0000) | ((HIDWORD(v30)) & 0xFF000000);
+						v31[0] = (HIDWORD(v30));
 						v31 += 1;
-						v31[0] = ((v29 & 0xFF00u) << 8 >> 16) | ((v29 & 0xFF00) << 8) | (v29 & 0xFF00) | ((*((tjs_uint32*)&(v30)+1)) & 0xFF000000);
+						v31[0] = ((v29 & 0xFF00u) << 8 >> 16) | ((v29 & 0xFF00) << 8) | (v29 & 0xFF00) | ((HIDWORD(v30)) & 0xFF000000);
 						v27 = v31 + 1;
 					}
 					v24 = v74;
 					v32 = 1566083941 * v29 + 1;
 					noise_current_seed = v32;
-					v87 = (tjs_uint32 *)v32;
 					if ( v28 > 1 )
 					{
-						(*((tjs_uint8*)&(v33))) = 0;
-						(*((tjs_uint8*)&(v33)+1)) = (*((tjs_uint8*)&(v87)+2));
+						v33 = (v33 & 0xFFFFFF00) | 0;
+						v33 = (v33 & 0xFFFF00FF) | (((v32 >> 16) & 0xff) << 8);
 						v24 = v32 & 0xFFFF0000;
 						v26[0] = (v32 & 0xFFFF0000) | (((v32 & 0xFF0000) | v33) >> 8) | 0xFF000000;
 						v90 = v26 + 1;
 					}
 					if ( v28 > 0 )
-						v90[0] = (tjs_uint16)(v32 & 0xFF00) | (*((tjs_uint8*)&(v32)+1)) | (((v32 & 0xFF00) | 0xFFFF0000) << 8);
+						v90[0] = (tjs_uint16)(v32 & 0xFF00) | ((((v32) >> 8) & 0xFF)) | (((v32 & 0xFF00) | 0xFFFF0000) << 8);
 					v26 = (tjs_uint32 *)((tjs_uint8 *)v26 + (tjs_uint32)dest_pitch);
 				}
 			}
@@ -662,7 +672,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 							v38 = v24 * (tjs_uint16)v37;
 							noise_current_seed = v37;
 							v39 = (tjs_uint8)(under + (v24 * ((v37 >> 16) & 0xFFFF) >> 16));
-							v35[0] = (tjs_uint8)(under + (*((tjs_uint8*)&(v38)+2))) | (((tjs_uint8)(under + (*((tjs_uint8*)&(v38)+2))) | ((((tjs_uint8)under + (*((tjs_uint8*)&(v38)+2))) | 0xFFFFFF00) << 8)) << 8);
+							v35[0] = (tjs_uint8)(under + ((((v38) >> 16) & 0xFF))) | (((tjs_uint8)(under + ((((v38) >> 16) & 0xFF))) | ((((tjs_uint8)under + ((((v38) >> 16) & 0xFF))) | 0xFFFFFF00) << 8)) << 8);
 							v40 = v35 + 1;
 							v41 = v39 | ((v39 | ((v39 | 0xFFFFFF00) << 8)) << 8);
 							v40[0] = v41;
