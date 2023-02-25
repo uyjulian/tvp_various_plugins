@@ -655,7 +655,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 					if ( remainder > 0 )
 						v27[0] = (tjs_uint16)(v32 & 0xFF00) | ((((v32) >> 8) & 0xFF)) | (((v32 & 0xFF00) | 0xFFFF0000) << 8);
 
-					v26 = (tjs_uint32 *)((tjs_uint8 *)v26 + (tjs_uint32)dest_pitch);
+					v26 = (tjs_uint32 *)((tjs_uint8 *)v26 + dest_pitch);
 				}
 			}
 			else
@@ -692,7 +692,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 						seed = noise_current_seed;
 					}
 					seed = noise_current_seed;
-					v90 = (tjs_uint32 *)((tjs_uint8 *)v90 + (tjs_uint32)dest_pitch);
+					v90 = (tjs_uint32 *)((tjs_uint8 *)v90 + dest_pitch);
 				}
 			}
 		}
@@ -740,7 +740,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 					v45[0] = ((tjs_uint32)noise_current_seed >> 8) | 0xFF000000;
 				}
 
-				v26 = (tjs_uint32 *)((tjs_uint8 *)v26 + (tjs_uint32)dest_pitch);
+				v26 = (tjs_uint32 *)((tjs_uint8 *)v26 + dest_pitch);
 			}
 		}
 		else
@@ -779,7 +779,7 @@ Noise(tTJSVariant *result, tjs_int numparams, tTJSVariant **param, iTJSDispatch2
 					seed = noise_current_seed;
 				}
 				seed = noise_current_seed;
-				v90 = (tjs_uint32 *)((tjs_uint8 *)v90 + (tjs_uint32)dest_pitch);
+				v90 = (tjs_uint32 *)((tjs_uint8 *)v90 + dest_pitch);
 			}
 		}
 	}
