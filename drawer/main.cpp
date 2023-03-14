@@ -137,136 +137,193 @@ static void sub_10001260(tjs_uint32 *a1, int a2, int a3, int a4)
 	line_vars.height_minus_one = a4 - 1;
 }
 
-void sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
+static unsigned int calc_pixel_1(unsigned int src, unsigned int dst, tjs_uint16 a3)
 {
-	int v7;
-	int v8;
-	int v9;
-	int v10;
-	int v11;
-	int v12;
-	int v13;
-	int v14;
-	int v15;
-	int v16;
-	int v17;
-	int v18;
-	int v19;
-	int v20;
-	int v21;
-	int v23;
-	int v24;
 	tjs_uint16 v25;
-	int v26;
-	int v27;
-	int v28;
+	int v47;
+	int v14;
+	int v40;
+
+	v25 = src;
+	v47 = (src >> 16) & 0xFF;
+	v14 = v25 >> 8;
+	v40 = (tjs_uint8)v25;
+
+	return (((v14 + (a3 * (((dst >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)(a3 * ((tjs_uint32)(tjs_uint8)(dst >> 16) - v47) >> 16) + (tjs_uint8)v47) | 0xFFFFFF00) << 8)) << 8) | (v40 + (a3 * ((dst & 0xFF) - v40) >> 16));
+}
+
+static unsigned int calc_pixel_2(unsigned int src, unsigned int dst, tjs_uint16 a3, int v26)
+{
+	tjs_uint16 v25;
+	int v47;
+	int v14;
+	int v40;
 	int v29;
 	int v30;
+
+	v25 = src;
+	v47 = (src >> 16) & 0xFF;
+	v14 = v25 >> 8;
+	v40 = (tjs_uint8)v25;
+
+	v29 = a3 * (((dst >> 8) & 0xFF) - v14);
+	v26 = (v26 & 0xFFFFFF00) | (v47 + (a3 * ((tjs_uint32)(((dst >> 16) & 0xFF)) - v47) >> 16));
+	v30 = a3 * ((tjs_uint8)dst - v40);
+
+	return (((v14 + (v29 >> 16)) | ((v26 | 0xFFFFFF00) << 8)) << 8) | (v40 + (v30 >> 16));
+}
+
+static unsigned int calc_pixel_3(unsigned int src, unsigned int dst, tjs_uint16 a3)
+{
+	int v16;
+	int v14;
+	int v17;
+
+	v16 = (src >> 16) & 0xFF;
+	v14 = (tjs_uint16)src >> 8;
+	v17 = (tjs_uint8)src;
+
+	return (((v14 + (a3 * (((dst >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)(a3 * ((tjs_uint32)(tjs_uint8)(dst >> 16) - v16) >> 16) + (tjs_uint8)v16) | 0xFFFFFF00) << 8)) << 8) | (v17 + (a3 * ((dst & 0xFF) - v17) >> 16));
+}
+
+static unsigned int calc_pixel_4(unsigned int src, unsigned int dst, tjs_uint16 a3)
+{
+	int v16;
+	int v14;
+	int v17;
+
+	v16 = (src >> 16) & 0xFF;
+	v14 = (tjs_uint16)src >> 8;
+	v17 = (tjs_uint8)src;
+
+	return (((v14 + (a3 * (((dst >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)(a3 * ((tjs_uint32)(tjs_uint8)(dst >> 16) - v16) >> 16) + (tjs_uint8)v16) | 0xFFFFFF00) << 8)) << 8) | (v17 + (a3 * ((dst & 0xFF) - v17) >> 16));
+}
+
+void sub_100014A0(int x1, int y1, int x2, int y2, tjs_uint32 color)
+{
+	int x_diff;
+	int y_diff;
+	int x1_precision;
+	int x2_precision;
+	int y1_precision;
+	int y2_precision;
+	int v13;
+	int v15;
+	int v18;
+	int v23;
+	int v24;
+	int v26;
 	int v31;
 	int v33;
 	int v34;
 	int v35;
 	int v37;
 	int v38;
-	int v39;
-	int v40;
 	int v41;
 	int v42;
-	int v43;
 	int v44;
 	int v45;
-	int v46;
-	int v47;
 
 	v31 = line_vars.pitch >> 2;
 	if ( x2 <= x1 )
 	{
-		v39 = x1 - x2;
-		v7 = x1 - x2;
+		x_diff = x1 - x2;
 	}
 	else
 	{
-		v7 = x2 - x1;
-		v39 = x2 - x1;
+		x_diff = x2 - x1;
 	}
 	if ( y2 <= y1 )
-		v8 = y1 - y2;
-	else
-		v8 = y2 - y1;
-	v9 = x1 << 16;
-	v10 = x2 << 16;
-	v11 = y1 << 16;
-	v12 = y2 << 16;
-	v43 = v8;
-	if ( v7 >= v8 )
 	{
-		if ( !v7 )
-			v39 = 1;
-		v14 = ((y2 << 16) - (y1 << 16)) / v39;
-		v23 = ((v10 - v9) >> 31) | 1;
+		y_diff = y1 - y2;
+	}
+	else
+	{
+		y_diff = y2 - y1;
+	}
+	x1_precision = x1 << 16;
+	x2_precision = x2 << 16;
+	y1_precision = y1 << 16;
+	y2_precision = y2 << 16;
+	if ( x_diff >= y_diff )
+	{
+#if 0
+		// FIXME: Why doesn't this work?
+		if ( !x_diff )
+			x_diff = 1;
+		v23 = ((x2_precision - x1_precision) >> 31) | 1;
+		v38 = (y2_precision - y1_precision) / x_diff;
+		for (int i = 0; i < x_diff; i += 1)
+		{
+			int y1_precision_index = v38 + (y1_precision * i);
+			v26 = ((x1_precision >> 16) + (v23 * i)) + (v31 * (y1_precision_index >> 16));
+			line_vars.buffer[v26] = calc_pixel_1(color, line_vars.buffer[v26], (tjs_uint16)y1_precision_index);
+			line_vars.buffer[v26 + v31] = calc_pixel_2(color, line_vars.buffer[v26 + v31], 0xFFFF - (tjs_uint16)y1_precision_index, v26);
+		}
+#else
+		if ( !x_diff )
+			x_diff = 1;
+		v23 = ((x2_precision - x1_precision) >> 31) | 1;
 		v34 = y1 << 16;
-		v24 = v9 >> 16;
+		v24 = x1_precision >> 16;
 		v37 = v23;
 		v42 = v24;
-		v38 = ((y2 << 16) - v11) / v39;
-		if ( v39 )
+		v38 = (y2_precision - y1_precision) / x_diff;
+		if ( x_diff )
 		{
-			v25 = color;
-			v47 = (color >> 16) & 0xFF;
-			v14 = v25 >> 8;
-			v40 = (tjs_uint8)v25;
-			for (int i = 0; i < v39; i += 1)
+			for (int i = 0; i < x_diff; i += 1)
 			{
-				v26 = v24 + v31 * (v11 >> 16);
-				v11 = (tjs_uint16)v11;
+				v26 = v24 + v31 * (y1_precision >> 16);
 				v45 = v26 + v31;
-				v27 = line_vars.buffer[v26];
-				line_vars.buffer[v26] = (((v14 + (v11 * (((v27 >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)(v11 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v26] >> 16) - v47) >> 16)
-																																												+ (tjs_uint8)v47) | 0xFFFFFF00) << 8)) << 8) | (v40 + (v11 * ((line_vars.buffer[v26] & 0xFF) - v40) >> 16));
-				v28 = line_vars.buffer[v26 + v31];
-				v29 = (0xFFFF - (tjs_uint16)v11) * (((v28 >> 8) & 0xFF) - v14);
-				v26 = (v26 & 0xFFFFFF00) | (v47 + ((0xFFFF - (tjs_uint16)v11) * ((tjs_uint32)(((v28 >> 16) & 0xFF)) - v47) >> 16));
-				v30 = (0xFFFF - (tjs_uint16)v11) * ((tjs_uint8)v28 - v40);
-				v11 = v38 + v34;
-				line_vars.buffer[v45] = (((v14 + (v29 >> 16)) | ((v26 | 0xFFFFFF00) << 8)) << 8) | (v40 + (v30 >> 16));
+				line_vars.buffer[v26] = calc_pixel_1(color, line_vars.buffer[v26], (tjs_uint16)y1_precision);
+				line_vars.buffer[v45] = calc_pixel_2(color, line_vars.buffer[v45], 0xFFFF - (tjs_uint16)y1_precision, v26);
+				y1_precision = v38 + v34;
 				v24 = v37 + v42;
 				v42 += v37;
 				v34 += v38;
 			}
 		}
+#endif
 	}
 	else
 	{
-		if ( !v8 )
-			v43 = 1;
-		v44 = v9;
-		v13 = ((v12 - (y1 << 16)) >> 31) | 1;
-		v35 = (v10 - v9) / v43;
-		if ( v43 )
+#if 1
+		if ( !y_diff )
+			y_diff = 1;
+		v13 = ((y2_precision - y1_precision) >> 31) | 1;
+		v35 = (x2_precision - x1_precision) / y_diff;
+		v33 = v31 * v13;
+		v41 = v31 * (tjs_int16)y1;
+		for (int i = 0; i < y_diff; i += 1)
+		{
+			int x1_precision_index = x1_precision + (v35 * i);
+			v18 = (v41 + (v33 * i)) + (x1_precision_index >> 16);
+			line_vars.buffer[v18] = calc_pixel_3(color, line_vars.buffer[v18], (tjs_uint16)x1_precision_index);
+			line_vars.buffer[v18 + 1] = calc_pixel_4(color, line_vars.buffer[v18 + 1], 0xFFFF - (tjs_uint16)x1_precision_index);
+		}
+#else
+		if ( !y_diff )
+			y_diff = 1;
+		v44 = x1_precision;
+		v13 = ((y2_precision - (y1 << 16)) >> 31) | 1;
+		v35 = (x2_precision - x1_precision) / y_diff;
+		if ( y_diff )
 		{
 			v15 = v31 * (tjs_int16)y1;
-			v16 = (color >> 16) & 0xFF;
-			v14 = (tjs_uint16)color >> 8;
-			v17 = (tjs_uint8)color;
 			v33 = v31 * v13;
-			v46 = (color >> 16) & 0xFF;
 			v41 = v31 * (tjs_int16)y1;
-			for (int i = 0; i < v43; i += 1)
+			for (int i = 0; i < y_diff; i += 1)
 			{
-				v18 = v15 + (v9 >> 16);
-				v19 = (tjs_uint16)v9;
-				v20 = line_vars.buffer[v18];
-				line_vars.buffer[v18] = (((v14 + (v19 * (((v20 >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)(v19 * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18] >> 16) - v16) >> 16)
-																																												+ (tjs_uint8)v16) | 0xFFFFFF00) << 8)) << 8) | (v17 + (v19 * ((line_vars.buffer[v18] & 0xFF) - v17) >> 16));
-				v21 = line_vars.buffer[v18 + 1];
-				line_vars.buffer[v18 + 1] = (((v14 + ((0xFFFF - v19) * (((v21 >> 8) & 0xFF) - v14) >> 16)) | ((((tjs_uint8)((0xFFFF - v19) * ((tjs_uint32)(tjs_uint8)(line_vars.buffer[v18 + 1] >> 16) - v46) >> 16) + (tjs_uint8)v46) | 0xFFFFFF00) << 8)) << 8) | (v17 + ((0xFFFF - v19) * ((line_vars.buffer[v18 + 1] & 0xFF) - v17) >> 16));
-				v9 = v35 + v44;
+				v18 = v15 + (x1_precision >> 16);
+				line_vars.buffer[v18] = calc_pixel_3(color, line_vars.buffer[v18], (tjs_uint16)x1_precision);
+				line_vars.buffer[v18 + 1] = calc_pixel_4(color, line_vars.buffer[v18 + 1], 0xFFFF - (tjs_uint16)x1_precision);
+				x1_precision = v35 + v44;
 				v15 = v33 + v41;
 				v44 += v35;
 				v41 += v33;
-				v16 = v46;
 			}
 		}
+#endif
 	}
 }
 
