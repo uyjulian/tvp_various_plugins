@@ -5,6 +5,6 @@ INCFLAGS += -Icommon
 
 LDLIBS += -luuid -lole32
 
-PROJECT_BASENAME = krkr_various_plugins
+PROJECT_BASENAME = tvp_various_plugins
 
 include external/ncbind/Rules.lib.make

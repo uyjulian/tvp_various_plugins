@@ -1,6 +1,6 @@
-# Various plugins for Kirikiri
+# Various plugins for TVP
 
-This repository contains various plugins for Kirikiri / 吉里吉里
+This repository contains various plugins for TVP (T Visual Presenter)
 
 ## Building
 
